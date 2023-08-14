@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { useState,useEffect } from "react";
 
@@ -32,11 +33,11 @@ const BookListTable = () => {
       <table className="min-w-full border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
-            <th className="border p-2">ID</th>
+            <th className="border p-2">Book ID</th>
             <th className="border p-2">Title</th>
             <th className="border p-2">Author</th>
             <th className="border p-2">Genre</th>
-            <th className="border p-2">Availability</th>
+            {/* <th className="border p-2">Availability</th> */}
           </tr>
         </thead>
         <tbody>
@@ -46,7 +47,7 @@ const BookListTable = () => {
               <td className="border p-2">{book.title}</td>
               <td className="border p-2">{book.author}</td>
               <td className="border p-2">{book.genre}</td>
-              <td className="border p-2">{book.availability}</td>
+              {/* <td className="border p-2">{book.availability}</td> */}
             </tr>
           ))}
         </tbody>

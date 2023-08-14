@@ -1,0 +1,20 @@
+export const students=[
+    {
+      id:1,
+      firstName:'Hishana',
+      lastName:'Muhammed',
+      department:'MCA',
+      batch:2022,
+      email:"hishana@gmail.com",
+      contact:986464872
+    },
+    {
+      id:2,
+      firstName:'Siva',
+      lastName:'Priya',
+      department:'BCA',
+      batch:2022,
+      email:"siva@gmail.com",
+      contact:986674872
+    },
+  ]

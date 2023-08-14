@@ -1,14 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 
-
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const router=useRouter()
+
+  const router = useRouter();
   const usernameHandler = (event) => {
     setUsername(event.target.value);
   };
@@ -17,9 +18,14 @@ const LoginForm = () => {
   };
   const handleLogin = async (event) => {
     event.preventDefault();
+
     if (username === "admin@gmail.com" && password === "admin") {
       alert("Logged In Successfully");
-      router.push('/Admin')
+
+      router.push(`/Admin/?LoggedIn=${true}`);
+    } else if (username === "librarian@gmail.com" && password === "librarian") {
+      alert("Logged In Successfull");
+      router.push(`/Librarian/?LibLogged=${true}`);
     } else {
       alert("Enter valid credentials");
       setPassword("");
