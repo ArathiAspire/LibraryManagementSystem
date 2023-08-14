@@ -18,10 +18,7 @@ function Sidebar() {
           <PiUsersThreeFill className="mr-2" />
           <Link href="/Admin/StudentList?LoggedIn=true">View Students</Link>
         </li>
-        <li className="flex justify-start items-center hover:bg-blue-200 hover:text-blue-800 rounded-xl p-2 ">
-          <MdLibraryAdd className="mr-2" />
-          <Link href="/Admin/BookList?LoggedIn=true">View Books</Link>
-        </li>
+      
         <li className="flex justify-start items-center hover:bg-blue-200 hover:text-blue-800 rounded-xl p-2 ">
           <MdPersonAddAlt1 className="mr-2" />
           <Link href="/Admin/AddLibrarian?LoggedIn=true">Add Librarian</Link>

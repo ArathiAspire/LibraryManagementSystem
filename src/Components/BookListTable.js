@@ -3,13 +3,16 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@mui/material";
+import Pagination from "./Pagination";
 
-const BookListTable = ({libLogged}) => {
+const BookListTable = ({ libLogged }) => {
+  const booksPerPage = 3;
   const [books, setBooks] = useState([]);
   const searchParams = useSearchParams();
   const LibLogged = searchParams.get("LibLogged");
   const [filters, setFilters] = useState({ title: "", genre: "" });
 
+  const [currentPage, setCurrentPage] = useState(1);
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
@@ -26,7 +29,7 @@ const BookListTable = ({libLogged}) => {
         title: data[key].title,
         author: data[key].author,
         genre: data[key].genre,
-        availability: data[key].availability,
+        status: data[key].status,
       });
     }
     setBooks(loadedBooks);
@@ -56,13 +59,18 @@ const BookListTable = ({libLogged}) => {
         console.log("Error while deleting");
       }
       fetchBooks();
-      
     }
   };
 
+  const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
+  const startIndex = (currentPage - 1) * booksPerPage;
+  const endIndex = startIndex + booksPerPage;
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const currentBooks = filteredBooks.slice(startIndex, endIndex);
   return (
-    <div className="tabledata w-full overflow-x-auto text-slate-900 p-8">
-      <div className="p-2 flex mx-auto">
+    <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
+      <div className="py-2 flex mx-auto">
         {" "}
         <input
           className="rounded p-2 mx-auto"
@@ -93,20 +101,35 @@ const BookListTable = ({libLogged}) => {
           </tr>
         </thead>
         <tbody>
-          {filteredBooks.map((book) => (
+          {currentBooks.map((book) => (
             <tr key={book.id} className="text-slate-200">
               <td className="border p-2">{book.id}</td>
               <td className="border p-2">{book.title}</td>
               <td className="border p-2">{book.author}</td>
               <td className="border p-2">{book.genre}</td>
               <td className="border p-2">{book.status}</td>
-              {!LibLogged && <td className="border p-2">
-                <Button color="error" className="text-slate-color-red-600" onClick={()=>onDeleteHandler(book.id)}>Delete</Button>
-              </td>}
+              {!LibLogged && (
+                <td className="border p-2">
+                  <Button
+                    color="error"
+                    className="text-slate-color-red-600"
+                    onClick={() => onDeleteHandler(book.id)}
+                  >
+                    Delete
+                  </Button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
+      <Pagination
+        booksPerPage={booksPerPage}
+        totalBooks={filteredBooks.length}
+        paginate={paginate}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };
