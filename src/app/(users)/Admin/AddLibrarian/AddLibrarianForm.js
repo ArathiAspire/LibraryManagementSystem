@@ -35,7 +35,12 @@ const AddLibrarian = () => {
     );
     const data=await res.json()
     console.log(data)
-    alert("Added Successfully");
+    toast("Added Successfully", {
+      hideProgressBar: true,
+      autoClose: 1000,
+      type: "success",
+      position: "top-center",
+    });
     setEmail("")
     setName("")
     setPass("")

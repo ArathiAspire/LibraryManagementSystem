@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -20,14 +21,29 @@ const LoginForm = () => {
     event.preventDefault();
 
     if (username === "admin@gmail.com" && password === "admin") {
-      alert("Logged In Successfully");
+      toast("Logged in successfully", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "success",
+        position: "top-center",
+      });
 
       router.push(`/Admin/?LoggedIn=${true}`);
     } else if (username === "librarian@gmail.com" && password === "librarian") {
-      alert("Logged In Successfull");
+      toast("Logged in successfully", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "success",
+        position: "top-center",
+      });
       router.push(`/Librarian/?LibLogged=${true}`);
     } else {
-      alert("Enter valid credentials");
+      toast("Enter valid credentials", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "warning",
+        position: "top-center",
+      });
       setPassword("");
       setUsername("");
     }

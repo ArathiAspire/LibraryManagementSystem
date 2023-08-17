@@ -10,8 +10,22 @@ import {
 import React from "react";
 import { useState, useEffect } from "react";
 import { students } from "@/api/students";
+import { toast } from "react-toastify";
 
 function IssueBook(props) {
+  const [issueDate, setIssuedate] = useState("");
+  const issueDateHandler = (e) => {
+    setIssuedate(e.target.value);
+  };
+  const [book, setBook] = useState("");
+  const issueBookHandler = (e) => {
+    setBook(e.target.value);
+  };
+  const [borrower, setBorrower] = useState("");
+  const borrowerHandler = (e) => {
+    setBorrower(e.target.value);
+  };
+
   const handleClose = () => {
     props.handleClose();
     console.log(books);
@@ -39,21 +53,85 @@ function IssueBook(props) {
     fetchBooks();
   }, []);
 
-  const filteredBookByAvailabilty = books.filter(
-    (book) => book.status === "Available"
-  );
+  const [issuedBooks, setIssuedBooks] = useState([]);
+
+  const fetchIssuedBooks = async () => {
+    const response = await fetch(
+      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry.json"
+    );
+    const data = await response.json();
+    const loadedBooks = [];
+    for (const key in data) {
+      loadedBooks.push({
+        id: key,
+        book: data[key].book,
+        borrower: data[key].borrower,
+        issueDate: data[key].issueDate,
+        status: data[key].status,
+      });
+    }
+    setIssuedBooks(loadedBooks);
+  };
+
+  useEffect(() => {
+    fetchIssuedBooks();
+  }, []);
+
+  const issueBook = books.filter((b) => b.title === book);
+ 
+
+  const booksNotIssued = [];
+  books.forEach((book) => {
+    const title = book.title;
+    if (!issuedBooks.some((entry) => entry.book === title)) {
+      booksNotIssued.push(book);
+    }
+  });
+
+
+  const bookIssueHandler = async (e) => {
+    e.preventDefault();
+    console.log(issueBook);
+    const issueBooks = {
+      issueBook,
+      issueDate: issueDate,
+      book: book,
+      borrower: borrower,
+      status: "Issued",
+    };
+    const res = await fetch(
+      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry.json",
+      {
+        method: "POST",
+        body: JSON.stringify(issueBooks),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+    toast(`"${book}" issued to ${borrower} successfully`, {
+      hideProgressBar: true,
+      autoClose: 1000,
+      type: "success",
+      position: "top-center",
+    });
+    props.handleClose();
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white w-1/2 rounded-lg shadow-lg p-6">
-        <form>
+        <form onSubmit={bookIssueHandler}>
           <h3 className="text-blue-900 font-bold mx-auto">Issue Book</h3>
           <TextField
             id="standard-full-width"
             // label="Date of issue"
             type="date"
             style={{ margin: 8 }}
-            // onChange={onSetTitle}
+            onChange={issueDateHandler}
+            value={issueDate}
             placeholder="Enter date of issue"
             fullWidth
             required
@@ -63,12 +141,12 @@ function IssueBook(props) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // value={book}
-              label="Add Product Category"
-              // onChange={onSetCategory}
+              value={book}
+              label="Select Book"
+              onChange={issueBookHandler}
             >
-              {filteredBookByAvailabilty.map((book) => (
-                <MenuItem key={book.id} value={book.id}>
+              {booksNotIssued.map((book) => (
+                <MenuItem key={book.id} value={book.title}>
                   {book.title}
                 </MenuItem>
               ))}
@@ -79,12 +157,12 @@ function IssueBook(props) {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              // value={book}
+              value={borrower}
               label="Borrower"
-              // onChange={onSetCategory}
+              onChange={borrowerHandler}
             >
               {students.map((student) => (
-                <MenuItem key={student.id} value={student.id}>
+                <MenuItem key={student.id} value={student.firstName}>
                   {student.firstName}
                 </MenuItem>
               ))}
@@ -92,17 +170,12 @@ function IssueBook(props) {
           </FormControl>
 
           <div className="flex justify-center space-x-4">
-            <Button
-              type="submit"
-              variant="outlined"
-              color="primary"
-              onClick={handleClose}
-            >
+            <Button type="submit" variant="outlined" color="primary">
               Issue
             </Button>
 
             <Button
-            className="px-4"
+              className="px-4"
               variant="outlined"
               color="info"
               onClick={handleClose}

@@ -4,13 +4,22 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@mui/material";
 import Pagination from "./Pagination";
+import { toast } from "react-toastify";
 
 const BookListTable = ({ libLogged }) => {
   const booksPerPage = 3;
   const [books, setBooks] = useState([]);
   const searchParams = useSearchParams();
   const LibLogged = searchParams.get("LibLogged");
-  const [filters, setFilters] = useState({ title: "", genre: "" });
+  const [filters, setFilters] = useState({
+    title: "",
+    genre: "",
+    id: "",
+    author: "",
+  });
+  useEffect(() => {
+    fetchBooks();
+  }, [books]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const handleFilterChange = (event) => {
@@ -39,11 +48,15 @@ const BookListTable = ({ libLogged }) => {
   }, []);
 
   const filteredBooks = books.filter((book) => {
-    const { title, genre } = filters;
+    const { title, genre, id, author } = filters;
     return (
       (title === "" ||
         book.title.toLowerCase().includes(title.toLowerCase())) &&
-      (genre === "" || book.genre.toLowerCase() === genre.toLowerCase())
+      (genre === "" || book.genre.toLowerCase() === genre.toLowerCase()) &&
+      (id === "" ||
+        book.id.toLowerCase().toString().includes(id.toLowerCase())) &&
+      (author === "" ||
+        book.author.toLowerCase().includes(author.toLowerCase()))
     );
   });
 
@@ -59,6 +72,12 @@ const BookListTable = ({ libLogged }) => {
         console.log("Error while deleting");
       }
       fetchBooks();
+      toast("Book Deleted", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "error",
+        position: "top-center",
+      });
     }
   };
 
@@ -68,6 +87,7 @@ const BookListTable = ({ libLogged }) => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const currentBooks = filteredBooks.slice(startIndex, endIndex);
+
   return (
     <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
       <div className="py-2 flex mx-auto">
@@ -78,6 +98,22 @@ const BookListTable = ({ libLogged }) => {
           name="title"
           placeholder="search here by title"
           value={filters.title}
+          onChange={handleFilterChange}
+        />
+        <input
+          className="rounded p-2 mx-auto"
+          type="text"
+          name="id"
+          placeholder="search here by id"
+          value={filters.id}
+          onChange={handleFilterChange}
+        />
+        <input
+          className="rounded p-2 mx-auto"
+          type="text"
+          name="author"
+          placeholder="search here by author name"
+          value={filters.author}
           onChange={handleFilterChange}
         />
         <input

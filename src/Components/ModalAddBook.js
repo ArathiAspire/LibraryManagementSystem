@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, TextField } from "@mui/material";
+import { toast } from "react-toastify";
 
 const ModalAddBook = (props) => {
   const router = useRouter();
@@ -18,33 +19,62 @@ const ModalAddBook = (props) => {
   const handleGenre = (event) => {
     setGenre(event.target.value);
   };
- 
 
   const handleAddBook = async (e) => {
     e.preventDefault();
-    const books = {
-      title: title,
-      author: author,
-      genre: genre,
-      status: "Available",
-    };
-    const res = await fetch(
-      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books.json",
-      {
-        method: "POST",
-        body: JSON.stringify(books),
-        headers: {
-          "Content-Type": "appliaction/json",
-        },
-      }
+    const response = await fetch(
+      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books.json"
     );
-    const data = await res.json();
-    console.log(data);
-    alert("Book Added Successfully");
-    setTitle("");
-    setGenre("");
-    setAuthor("");
-    props.handleCloseAddBookModal();
+    const data = await response.json();
+    var flag = false;
+    for (const key in data) {
+      if (data[key].title === title) {
+        flag = true;
+        toast("Book already exists", {
+          hideProgressBar: true,
+          autoClose: 1000,
+          type: "warning",
+          position: "bottom-left",
+        });
+
+        setTitle("");
+        setGenre("");
+        setAuthor("");
+        break;
+      }
+    }
+
+    if (!flag) {
+      const books = {
+        title: title,
+        author: author,
+        genre: genre,
+        status: "Available",
+      };
+      const res = await fetch(
+        "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books.json",
+        {
+          method: "POST",
+          body: JSON.stringify(books),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const datas = await res.json();
+      console.log(datas);
+      toast("Book Added Successfully", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "success",
+        position: "bottom-left",
+      });
+
+      setTitle("");
+      setGenre("");
+      setAuthor("");
+      props.handleCloseAddBookModal();
+    }
   };
   const handleClose = () => {
     props.handleCloseAddBookModal();
@@ -88,7 +118,7 @@ const ModalAddBook = (props) => {
             fullWidth
             className="py-3"
           />
-          <div className="p-2 mx-auto justify-center">
+          <div className="flex justify-center space-x-4">
             <Button type="submit" variant="outlined" color="primary">
               Add
             </Button>

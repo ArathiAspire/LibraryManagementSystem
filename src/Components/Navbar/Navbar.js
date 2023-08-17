@@ -5,6 +5,7 @@ import {AiOutlineMenu} from "react-icons/ai";
 import { useRouter, useSearchParams } from "next/navigation";
 import { withWidth } from "@material-ui/core";
 import Sidebar from "@/app/(users)/Admin/Sidebar/Sidebar";
+import { signOut } from "next-auth/react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +55,7 @@ export default function Navbar() {
         ): LibLogged ? (
           <>
             <p className="block font-medium p-4">Welcome Librarian</p>
-            <Button href="/" color="inherit">
+            <Button href="/"  color="inherit">
               Logout
             </Button>
           </>

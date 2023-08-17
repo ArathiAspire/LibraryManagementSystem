@@ -3,6 +3,7 @@
 import BookListTable from "@/Components/BookListTable";
 import ModalAddBook from "@/Components/ModalAddBook";
 import { Button, Modal } from "@mui/material";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -14,6 +15,14 @@ export default function Admin() {
   const handleCloseAddBookModal = () => {
     setOpen(false);
   };
+  // const {data:session,status}=useSession({
+  //   required:true
+    
+  // })
+
+  // if(status==='loading'){
+  //   return <></>
+  // }
   return (
     <div>
       <div className="px-10 py-10">

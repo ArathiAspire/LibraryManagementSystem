@@ -35,8 +35,8 @@ const Pagination = ({
           <button
             key={number}
             onClick={() => paginate(number)}
-            className={`bg-white border-2 border-gray-600 rounded-full w-9 h-9 flex items-center justify-center ${
-              currentPage === number ? "bg-gray-300" : "bg-white"
+            className={` border-2 border-gray-600 rounded-full w-9 h-9 flex items-center justify-center ${
+              currentPage === number ? "bg-gray-600" : "bg-white"
             }`}
           >
             {number}
