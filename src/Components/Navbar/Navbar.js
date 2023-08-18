@@ -8,6 +8,7 @@ import { auth } from "@/app/firebase";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -49,7 +50,7 @@ export default function Navbar() {
     router.push('/signin');
 
   };
- 
+
   
   const onSignOutHandler = () => {
     signOut(auth).then(()=>{
@@ -60,10 +61,12 @@ export default function Navbar() {
         position: "top-center",
       });
       router.push('/')
+     
     }).catch((error)=>{
       console.log("Error occured while signing out");
     })
   };
+  
  
   return (
     <AppBar position="static" style={{ backgroundColor: "#234" }}>

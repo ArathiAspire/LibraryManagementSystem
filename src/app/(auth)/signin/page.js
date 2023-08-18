@@ -8,7 +8,6 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
 
-
 const LoginForm = () => {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -43,20 +42,25 @@ const LoginForm = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        toast("Logged in successfully", {
+        toast("Signed in successfully", {
           hideProgressBar: true,
           autoClose: 1000,
           type: "success",
           position: "top-center",
         });
-        const user = userCredential.user;
-        {
-          adminLogged ? router.push("/Admin") : router.push("/Librarian");
+        if (email === "admin@gmail.com") {
+          router.push("/Admin");
+        } else {
+          router.push("/Librarian");
         }
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        toast("Error while signing in", {
+          hideProgressBar: true,
+          autoClose: 1000,
+          type: "error",
+          position: "top-center",
+        });
       });
   };
 
