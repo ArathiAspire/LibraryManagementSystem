@@ -11,9 +11,8 @@ import {
 } from "react-icons/bs";
 import { Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import AddBook from "./BookList/AddBook/AddBookForm";
 import IssueBook from "@/Components/IssueBook";
-import ReturnBook from "@/Components/ReturnBook";
+import ModalReturnBook from "@/Components/ModalReturnBook";
 
 function LibNavbar() {
   const [openIssue, setOpenIssue] = useState(false);
@@ -39,7 +38,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/Librarian"
+                  href="/librarian"
                 >
                   <AiFillHome />
                   Home{" "}
@@ -48,7 +47,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/Librarian/BookList?LibLogged=true"
+                  href="/librarian/bookList"
                 >
                   <SiBookstack />
                   Books{" "}
@@ -57,7 +56,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/Librarian/StudentList?Liblogged=true"
+                  href="/librarian/studentList"
                 >
                   <PiStudentBold />
                   Students{" "}
@@ -66,7 +65,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/Librarian/BookTakenEntry?Liblogged=true"
+                  href="/librarian/bookTakenEntry"
                 >
                   <BsFillBookmarkDashFill />
                   Book Taken Entry{" "}
@@ -75,7 +74,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/Librarian/BookReturnEntry?Liblogged=true"
+                  href="/librarian/bookReturnEntry"
                 >
                   <BsFillBookmarkCheckFill />
                   Book Return Entry{" "}
@@ -86,37 +85,20 @@ function LibNavbar() {
                   className="text-white hover:text-blue-300 items-center flex p-2"
                   onClick={handleOpenIssueModal}
                 >
-                <FaBookReader/>
+                  <FaBookReader />
                   Issue Book
                 </Button>
               </li>
-              {/* <li>
-              <Link
-                className="text-white hover:text-blue-300 items-center flex p-2"
-                href="BookTakenEntry?Liblogged=true"
-              >
-                <BsFillBookmarkCheckFill />
-                Issue Book{" "}
-              </Link>
-            </li> */}
-            <li>
+
+              <li>
                 <Button
                   className="text-white hover:text-blue-300 items-center flex p-2"
                   onClick={handleOpenReturnModal}
                 >
-                 <BsFillBookmarkCheckFill />
+                  <BsFillBookmarkCheckFill />
                   Return Book
                 </Button>
               </li>
-              {/* <li>
-                <Link
-                  className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="BookTakenEntry?Liblogged=true"
-                >
-                  <BsFillBookmarkCheckFill />
-                  Return Book{" "}
-                </Link>
-              </li> */}
             </ul>
           </div>
         </div>
@@ -126,9 +108,15 @@ function LibNavbar() {
           <IssueBook handleClose={handleCloseIssueModal} />
         </div>
       </Modal>
-      <Modal open={openReturn} onClose={handleCloseReturnModal}>
+
+      {/* <Modal open={openReturn} onClose={handleCloseReturnModal}>
         <div>
           <ReturnBook handleClose={handleCloseReturnModal} />
+        </div>
+      </Modal> */}
+      <Modal open={openReturn} onClose={handleCloseReturnModal}>
+        <div>
+          <ModalReturnBook handleClose={handleCloseReturnModal}/>{" "}
         </div>
       </Modal>
     </div>

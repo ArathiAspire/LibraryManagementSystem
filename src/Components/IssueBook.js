@@ -78,7 +78,6 @@ function IssueBook(props) {
   }, []);
 
   const issueBook = books.filter((b) => b.title === book);
- 
 
   const booksNotIssued = [];
   books.forEach((book) => {
@@ -87,7 +86,6 @@ function IssueBook(props) {
       booksNotIssued.push(book);
     }
   });
-
 
   const bookIssueHandler = async (e) => {
     e.preventDefault();

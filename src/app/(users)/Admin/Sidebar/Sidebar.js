@@ -12,16 +12,16 @@ function Sidebar() {
       <ul>
         <li className="flex justify-start items-center hover:bg-blue-200 hover:text-blue-800 rounded-xl p-2 ">
           <AiOutlineHome className="mr-2" />
-          <Link href="/Admin?LoggedIn=true">Home</Link>
+          <Link href="/admin">Home</Link>
         </li>
         <li className="flex justify-start items-center hover:bg-blue-200 hover:text-blue-800 rounded-xl p-2 ">
           <PiUsersThreeFill className="mr-2" />
-          <Link href="/Admin/StudentList?LoggedIn=true">View Students</Link>
+          <Link href="/admin/studentList">View Students</Link>
         </li>
       
         <li className="flex justify-start items-center hover:bg-blue-200 hover:text-blue-800 rounded-xl p-2 ">
           <MdPersonAddAlt1 className="mr-2" />
-          <Link href="/Admin/AddLibrarian?LoggedIn=true">Add Librarian</Link>
+          <Link href="/admin/addLibrarian">Add Librarian</Link>
         </li>
         
       </ul>

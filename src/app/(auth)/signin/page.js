@@ -42,16 +42,23 @@ const LoginForm = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        toast("Signed in successfully", {
-          hideProgressBar: true,
-          autoClose: 1000,
-          type: "success",
-          position: "top-center",
-        });
+        
         if (email === "admin@gmail.com") {
-          router.push("/Admin");
+          router.push("/admin");
+          toast("Admin signed in successfully", {
+            hideProgressBar: true,
+            autoClose: 1000,
+            type: "success",
+            position: "top-center",
+          });
         } else {
-          router.push("/Librarian");
+          toast("Librarian signed in successfully", {
+            hideProgressBar: true,
+            autoClose: 1000,
+            type: "success",
+            position: "top-center",
+          });
+          router.push("/librarian");
         }
       })
       .catch((error) => {

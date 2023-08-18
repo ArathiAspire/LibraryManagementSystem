@@ -34,6 +34,9 @@ export default function Navbar() {
         } else {
           setLibrarianLogged(true);
         }
+      } else {
+        setAdminLogged(false);
+        setLibrarianLogged(false);
       }
     });
     return () => {

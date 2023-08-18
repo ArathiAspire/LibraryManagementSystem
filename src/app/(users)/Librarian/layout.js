@@ -1,6 +1,5 @@
 import React from "react";
 import LibNavbar from "./libNavbar";
-import BookList from "./BookList/page";
 import BookListTable from "@/app/BookList/BookListTable";
 
 function layout({ children }) {
