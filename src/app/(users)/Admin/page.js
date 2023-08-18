@@ -15,14 +15,7 @@ export default function Admin() {
   const handleCloseAddBookModal = () => {
     setOpen(false);
   };
-  // const {data:session,status}=useSession({
-  //   required:true
-    
-  // })
-
-  // if(status==='loading'){
-  //   return <></>
-  // }
+  
   return (
     <div>
       <div className="px-10 py-10">

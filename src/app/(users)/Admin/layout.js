@@ -11,7 +11,6 @@ function layout({ children }) {
     <div className="flex justify-start items-start">
     
       <Sidebar/>
-      {/* <AdminNavbar /> */}
       <main className="flex-1">{children}</main>
     </div>
   );
