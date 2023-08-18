@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { onAuthStateChanged } from "firebase/auth";
+
 
 const LoginForm = () => {
   const [email, setUsername] = useState("");
@@ -18,6 +20,23 @@ const LoginForm = () => {
   const passwordHandler = (event) => {
     setPassword(event.target.value);
   };
+  const [adminLogged, setAdminLogged] = useState(false);
+  const [librarianLogged, setLibrarianLogged] = useState(false);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userEmail = user.email;
+        if (userEmail === "admin@gmail.com") {
+          setAdminLogged(true);
+        } else {
+          setLibrarianLogged(true);
+        }
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  });
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -31,53 +50,15 @@ const LoginForm = () => {
           position: "top-center",
         });
         const user = userCredential.user;
-
-        router.push(`/Admin/?LoggedIn=${true}`);
+        {
+          adminLogged ? router.push("/Admin") : router.push("/Librarian");
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
-    // if (email === "admin@gmail.com" && password === "admin") {
-    //   toast("Logged in successfully", {
-    //     hideProgressBar: true,
-    //     autoClose: 1000,
-    //     type: "success",
-    //     position: "top-center",
-    //   });
-
-    //   router.push(`/Admin/?LoggedIn=${true}`);
-    // } else if (email === "librarian@gmail.com" && password === "librarian") {
-    //   toast("Logged in successfully", {
-    //     hideProgressBar: true,
-    //     autoClose: 1000,
-    //     type: "success",
-    //     position: "top-center",
-    //   });
-    //   router.push(`/Librarian/?LibLogged=${true}`);
-    // } else {
-    //   toast("Enter valid credentials", {
-    //     hideProgressBar: true,
-    //     autoClose: 1000,
-    //     type: "warning",
-    //     position: "top-center",
-    //   });
-    //   setPassword("");
-    //   setUsername("");
-    // }
   };
-  // const handleLogin = async () => {
-  //   try {
-  //     await signIn("credentials", {
-  //       email,
-  //       password,
-  //       redirect: false,
-  //     });
-  //     router.push("/Admin");
-  //   } catch (error) {
-  //     console.error("Login error:", error);
-  //   }
-  // };
 
   return (
     <div className="bg-gray-100 flex justify-center items-center h-screen">
