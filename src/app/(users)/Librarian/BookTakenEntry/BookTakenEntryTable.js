@@ -18,6 +18,7 @@ function BookTakenEntryTable() {
         borrower: data[key].borrower,
         issueDate: data[key].issueDate,
         status: data[key].status,
+        returnDate: data[key].returnDate,
       });
       id++;
     }
@@ -37,6 +38,8 @@ function BookTakenEntryTable() {
             <th className="border p-2">Issued to</th>
             <th className="border p-2">Issued Date</th>
             <th className="border p-2">Status</th>
+            <th className="border p-2">Returned Date</th>
+
           </tr>
         </thead>
         <tbody>
@@ -47,6 +50,7 @@ function BookTakenEntryTable() {
               <td className="border p-2">{book.borrower}</td>
               <td className="border p-2">{book.issueDate}</td>
               <td className="border p-2">{book.status}</td>
+              <td className="border p-2">{book.returnDate}</td>
             </tr>
           ))}
         </tbody>

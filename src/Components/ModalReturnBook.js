@@ -83,6 +83,7 @@ function ModalReturnBook(props) {
           body: JSON.stringify({
             status: "Returned",
             issuedTo: returnedFrom,
+            returnDate: returnDate,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -108,7 +109,7 @@ function ModalReturnBook(props) {
   useEffect(() => {
     fetchBooks();
   }, [updatedBook]);
-  
+
   const filteredBook = returningbooks.filter(
     (book) => book.status === "Issued"
   );

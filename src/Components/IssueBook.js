@@ -96,6 +96,7 @@ function IssueBook(props) {
       book: book,
       borrower: borrower,
       status: "Issued",
+      returnDate: "Not returned",
     };
     const res = await fetch(
       "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry.json",
