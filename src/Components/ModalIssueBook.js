@@ -12,16 +12,17 @@ import { useState, useEffect } from "react";
 import { students } from "@/api/students";
 import { toast } from "react-toastify";
 
-function IssueBook(props) {
+function ModalIssueBook(props) {
   const [issueDate, setIssuedate] = useState("");
+  const [book, setBook] = useState("");
+  const [borrower, setBorrower] = useState("");
+
   const issueDateHandler = (e) => {
     setIssuedate(e.target.value);
   };
-  const [book, setBook] = useState("");
   const issueBookHandler = (e) => {
     setBook(e.target.value);
   };
-  const [borrower, setBorrower] = useState("");
   const borrowerHandler = (e) => {
     setBorrower(e.target.value);
   };
@@ -89,6 +90,24 @@ function IssueBook(props) {
 
   const bookIssueHandler = async (e) => {
     e.preventDefault();
+
+    try {
+      await fetch(
+        `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books/${issueBook[0].id}.json`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            status: "Not Available",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("status updated in booklist");
+    } catch (error) {
+      console.log("Error while updating status in booklist");
+    }
     console.log(issueBook);
     const issueBooks = {
       issueBook,
@@ -188,4 +207,4 @@ function IssueBook(props) {
   );
 }
 
-export default IssueBook;
+export default ModalIssueBook;

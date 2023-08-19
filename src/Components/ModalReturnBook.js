@@ -71,10 +71,11 @@ function ModalReturnBook(props) {
       (b) => b.book === enteredbook
     );
     if (returnedBookIndex !== -1) {
-      updatedReturnedBooks[returnedBookIndex].status = "Returned";
-      updatedReturnedBooks[returnedBookIndex].issuedTo = returnedFrom;
+      // updatedReturnedBooks[returnedBookIndex].status = "Returned";
+      // updatedReturnedBooks[returnedBookIndex].issuedTo = returnedFrom;
       setUpdatedBook(updatedReturnedBooks[returnedBookIndex]);
     }
+    console.log(updatedReturnedBooks[returnedBookIndex])
     try {
       await fetch(
         `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry/${updatedBook.id}.json`,

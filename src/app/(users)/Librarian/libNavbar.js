@@ -11,8 +11,8 @@ import {
 } from "react-icons/bs";
 import { Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import IssueBook from "@/Components/IssueBook";
 import ModalReturnBook from "@/Components/ModalReturnBook";
+import ModalIssueBook from "@/Components/ModalIssueBook";
 
 function LibNavbar() {
   const [openIssue, setOpenIssue] = useState(false);
@@ -65,13 +65,13 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/librarian/bookTakenEntry"
+                  href="/librarian/bookEntries"
                 >
                   <BsFillBookmarkDashFill />
-                  Book Taken Entry{" "}
+                  Book Entries{" "}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
                   href="/librarian/bookReturnEntry"
@@ -79,7 +79,7 @@ function LibNavbar() {
                   <BsFillBookmarkCheckFill />
                   Book Return Entry{" "}
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Button
                   className="text-white hover:text-blue-300 items-center flex p-2"
@@ -105,7 +105,8 @@ function LibNavbar() {
       </nav>
       <Modal open={openIssue} onClose={handleCloseIssueModal}>
         <div>
-          <IssueBook handleClose={handleCloseIssueModal} />
+          <ModalIssueBook handleClose={handleCloseIssueModal} />
+          {/* <IssueBook handleClose={handleCloseIssueModal} /> */}
         </div>
       </Modal>
 
@@ -116,7 +117,7 @@ function LibNavbar() {
       </Modal> */}
       <Modal open={openReturn} onClose={handleCloseReturnModal}>
         <div>
-          <ModalReturnBook handleClose={handleCloseReturnModal}/>{" "}
+          <ModalReturnBook handleClose={handleCloseReturnModal} />{" "}
         </div>
       </Modal>
     </div>

@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@mui/material";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/app/firebase";
 
 const BookListTable = ({ libLogged }) => {
   const booksPerPage = 3;
@@ -88,6 +90,28 @@ const BookListTable = ({ libLogged }) => {
 
   const currentBooks = filteredBooks.slice(startIndex, endIndex);
 
+  const [adminLogged, setAdminLogged] = useState(false);
+  const [librarianLogged, setLibrarianLogged] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userEmail = user.email;
+        if (userEmail === "admin@gmail.com") {
+          setAdminLogged(true);
+        } else {
+          setLibrarianLogged(true);
+        }
+      } else {
+        setAdminLogged(false);
+        setLibrarianLogged(false);
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  });
+
   return (
     <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
       <div className="py-2 flex mx-auto">
@@ -144,7 +168,7 @@ const BookListTable = ({ libLogged }) => {
               <td className="border p-2">{book.author}</td>
               <td className="border p-2">{book.genre}</td>
               <td className="border p-2">{book.status}</td>
-              {!LibLogged && (
+              {adminLogged && (
                 <td className="border p-2">
                   <Button
                     color="error"
