@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { auth } from "@/app/firebase";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
-
+import Link from "next/link";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +42,7 @@ export default function Navbar() {
     return () => {
       unsubscribe();
     };
-  }, );
+  });
   const router = useRouter();
   const searchParams = useSearchParams();
   const LoggedIn = searchParams.get("LoggedIn");
@@ -50,27 +50,25 @@ export default function Navbar() {
 
   const classes = useStyles();
   const goToLogin = () => {
-    router.push('/signin');
-
+    router.push("/signin");
   };
 
-  
   const onSignOutHandler = () => {
-    signOut(auth).then(()=>{
-      toast("Signed Out successfully", {
-        hideProgressBar: true,
-        autoClose: 1000,
-        type: "success",
-        position: "top-center",
+    signOut(auth)
+      .then(() => {
+        toast("Signed Out successfully", {
+          hideProgressBar: true,
+          autoClose: 1000,
+          type: "success",
+          position: "top-center",
+        });
+        router.push("/");
+      })
+      .catch((error) => {
+        console.log("Error occured while signing out");
       });
-      router.push('/')
-     
-    }).catch((error)=>{
-      console.log("Error occured while signing out");
-    })
   };
-  
- 
+
   return (
     <AppBar position="static" style={{ backgroundColor: "#234" }}>
       <Toolbar>
@@ -81,6 +79,18 @@ export default function Navbar() {
             <div>Library Management System</div>
           )}
         </Typography>
+        <ul className={`${classes.title} flex space-x-10 pr-20 space-around`}>
+          <li>
+            <Link href="/" className="text-white hover-text-blue">
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link href="/about" className="text-white">
+              About Us
+            </Link>
+          </li>
+        </ul>
         <>
           {adminLogged && (
             <p className="block font-medium p-4">Welcome Admin</p>
@@ -98,7 +108,6 @@ export default function Navbar() {
             </Button>
           )}
         </>
-     
       </Toolbar>
     </AppBar>
   );

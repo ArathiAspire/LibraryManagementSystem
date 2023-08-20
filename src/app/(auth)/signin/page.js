@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
+import styles from './signin.module.css'
 
 const LoginForm = () => {
   const [email, setUsername] = useState("");
@@ -72,7 +73,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex justify-center items-center h-screen">
+    <div className={`${styles.loginBackground} bg-gray-100 flex justify-center items-center h-screen`}>
       <div className="bg-white p-8 rounded shadow-md w-96  text-slate-900">
         <h4 className="text-2xl font-semibold mb-4">Login Page</h4>
 
