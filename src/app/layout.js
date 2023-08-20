@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Footer from "@/Components/Footer/Footer";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import { ReduxProvider } from "@/redux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +19,14 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.className} bg-slate-800 text-slate-100 mx-auto  flex flex-col min-h-screen`}
       >
+      <ReduxProvider>
         <ToastContainer />
         <Navbar />
 
         {children}
 
         <Footer />
+        </ReduxProvider>
       </body>
     </html>
   );

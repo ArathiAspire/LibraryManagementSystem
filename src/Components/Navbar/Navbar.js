@@ -1,5 +1,23 @@
 "use client";
-import { AppBar, Button, Menu, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Button,
+  Logout,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography,
+  Stack,
+  Paper,
+  MenuList,
+  Popper,
+  Grow,
+  ClickAwayListener,
+} from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { useRouter, useSearchParams } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
@@ -8,6 +26,10 @@ import { auth } from "@/app/firebase";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { useRef } from "react";
+import { logOut } from "@/redux/features/auth-slice";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +44,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Navbar() {
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
+  const username = useSelector((state) => state.authReducer.value.username);
+
   const [adminLogged, setAdminLogged] = useState(false);
   const [librarianLogged, setLibrarianLogged] = useState(false);
 
@@ -67,8 +126,56 @@ export default function Navbar() {
       .catch((error) => {
         console.log("Error occured while signing out");
       });
+      dispatch(logOut())
   };
-
+  const userMenu = (
+    <div>
+      <IconButton
+        ref={anchorRef}
+        id="composition-button"
+        aria-controls={open ? "composition-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleToggle}
+      >
+        <Avatar sx={{ width: 32, height: 32 }}>
+          {adminLogged ? "A" : "L"}
+        </Avatar>
+      </IconButton>
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        placement="bottom-start"
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom-start" ? "left top" : "left bottom",
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList
+                  autoFocusItem={open}
+                  id="composition-menu"
+                  aria-labelledby="composition-button"
+                  onKeyDown={handleListKeyDown}
+                >
+                  <MenuItem onClick={handleClose}>{username}</MenuItem>
+                  <MenuItem onClick={onSignOutHandler}>Logout</MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </div>
+  );
   return (
     <AppBar position="static" style={{ backgroundColor: "#234" }}>
       <Toolbar>
@@ -92,6 +199,8 @@ export default function Navbar() {
           </li>
         </ul>
         <>
+          {(adminLogged || librarianLogged) && userMenu}
+
           {adminLogged && (
             <p className="block font-medium p-4">Welcome Admin</p>
           )}
@@ -99,9 +208,7 @@ export default function Navbar() {
             <p className="block font-medium p-4">Welcome Librarian</p>
           )}
           {adminLogged || librarianLogged ? (
-            <Button onClick={onSignOutHandler} color="inherit">
-              Logout
-            </Button>
+            ""
           ) : (
             <Button onClick={goToLogin} color="inherit">
               Login

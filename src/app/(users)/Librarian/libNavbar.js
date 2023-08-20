@@ -11,8 +11,8 @@ import {
 } from "react-icons/bs";
 import { Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import ModalReturnBook from "@/Components/ModalReturnBook";
 import ModalIssueBook from "@/Components/ModalIssueBook";
+import ReturnBookModal from "@/Components/ReturnBookModal";
 
 function LibNavbar() {
   const [openIssue, setOpenIssue] = useState(false);
@@ -117,7 +117,7 @@ function LibNavbar() {
       </Modal> */}
       <Modal open={openReturn} onClose={handleCloseReturnModal}>
         <div>
-          <ModalReturnBook handleClose={handleCloseReturnModal} />{" "}
+        <ReturnBookModal handleClose={handleCloseReturnModal}/>
         </div>
       </Modal>
     </div>

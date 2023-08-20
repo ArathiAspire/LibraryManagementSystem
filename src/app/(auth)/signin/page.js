@@ -7,11 +7,15 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
-import styles from './signin.module.css'
+import styles from "./signin.module.css";
+import { logIn, logOut } from "@/redux/features/auth-slice";
+import { useDispatch } from "react-redux";
 
 const LoginForm = () => {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
 
   const router = useRouter();
   const usernameHandler = (event) => {
@@ -43,7 +47,6 @@ const LoginForm = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        
         if (email === "admin@gmail.com") {
           router.push("/admin");
           toast("Admin signed in successfully", {
@@ -61,6 +64,8 @@ const LoginForm = () => {
           });
           router.push("/librarian");
         }
+        dispatch(logIn(email))
+
       })
       .catch((error) => {
         toast("Error while signing in", {
@@ -73,7 +78,9 @@ const LoginForm = () => {
   };
 
   return (
-    <div className={`${styles.loginBackground} bg-gray-100 flex justify-center items-center h-screen`}>
+    <div
+      className={`${styles.loginBackground} bg-gray-100 flex justify-center items-center h-screen`}
+    >
       <div className="bg-white p-8 rounded shadow-md w-96  text-slate-900">
         <h4 className="text-2xl font-semibold mb-4">Login Page</h4>
 

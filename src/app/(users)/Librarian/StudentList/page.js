@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { use } from "react";
-import StudentListTable from "./StudentListTable";
+import StudentListTable from "../../../../Components/StudentListTable";
 import { students } from "@/api/students";
 // https://rickandmortyapi.com/api/character
 // https://jsonplaceholder.typicode.com/users
