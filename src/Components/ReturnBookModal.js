@@ -85,8 +85,7 @@ function ReturnBookModal(props) {
     fetchBooksFromBooks();
   }, []);
 
-        const returnBook = books.filter((b) => b.title === enteredbook);
-
+  const returnBook = books.filter((b) => b.title === enteredbook);
 
   const bookReturnHandler = async (e) => {
     e.preventDefault();
@@ -98,7 +97,7 @@ function ReturnBookModal(props) {
     if (returnedBookIndex !== -1) {
       setUpdatedBook(updatedReturnedBooks[returnedBookIndex]);
     }
-    console.log(updatedReturnedBooks[returnedBookIndex]);
+    console.log(updatedBook);
     try {
       await fetch(
         `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry/${updatedBook.id}.json`,
@@ -114,6 +113,7 @@ function ReturnBookModal(props) {
           },
         }
       );
+      console.log(returnBook);
 
       try {
         await fetch(
