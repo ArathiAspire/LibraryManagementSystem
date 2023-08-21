@@ -32,6 +32,7 @@ function ModalIssueBook(props) {
     console.log(books);
   };
   const [books, setBooks] = useState([]);
+  const [availableBooks, setAvailableBooks] = useState([]);
 
   const fetchBooks = async () => {
     const response = await fetch(
@@ -49,6 +50,8 @@ function ModalIssueBook(props) {
       });
     }
     setBooks(loadedBooks);
+    const available = loadedBooks.filter((book) => book.status === "Available");
+    setAvailableBooks(available);
   };
   useEffect(() => {
     fetchBooks();
@@ -80,13 +83,13 @@ function ModalIssueBook(props) {
 
   const issueBook = books.filter((b) => b.title === book);
 
-  const booksNotIssued = [];
-  books.forEach((book) => {
-    const title = book.title;
-    if (!issuedBooks.some((entry) => entry.book === title)) {
-      booksNotIssued.push(book);
-    }
-  });
+  // const booksNotIssued = [];
+  // books.forEach((book) => {
+  //   const title = book.title;
+  //   if (!issuedBooks.some((entry) => entry.book === title)) {
+  //     booksNotIssued.push(book);
+  //   }
+  // });
 
   const bookIssueHandler = async (e) => {
     e.preventDefault();
@@ -163,7 +166,7 @@ function ModalIssueBook(props) {
               label="Select Book"
               onChange={issueBookHandler}
             >
-              {booksNotIssued.map((book) => (
+              {availableBooks.map((book) => (
                 <MenuItem key={book.id} value={book.title}>
                   {book.title}
                 </MenuItem>

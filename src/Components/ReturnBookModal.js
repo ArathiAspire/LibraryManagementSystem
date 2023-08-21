@@ -97,8 +97,8 @@ function ReturnBookModal(props) {
     if (returnedBookIndex !== -1) {
       setUpdatedBook(updatedReturnedBooks[returnedBookIndex]);
     }
-    console.log(updatedBook);
-    try {
+    console.log("updated book:",updatedBook);
+    // try {
       await fetch(
         `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry/${updatedBook.id}.json`,
         {
@@ -142,14 +142,14 @@ function ReturnBookModal(props) {
       });
 
       props.handleClose();
-    } catch (error) {
-      toast("Error while returning book", {
-        hideProgressBar: true,
-        autoClose: 1000,
-        type: "error",
-        position: "top-center",
-      });
-    }
+    // } catch (error) {
+    //   toast("Error while returning book", {
+    //     hideProgressBar: true,
+    //     autoClose: 1000,
+    //     type: "error",
+    //     position: "top-center",
+    //   });
+    // }
   };
   useEffect(() => {
     fetchBooks();
