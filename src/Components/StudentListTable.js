@@ -15,7 +15,7 @@ const StudentListTable = ({ students }) => {
             <th className="border p-2">Batch</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-gray-900">
           {students.map((student) => (
             <tr key={student.id} className="text-slate-200">
               <td className="border p-2">{student.id}</td>

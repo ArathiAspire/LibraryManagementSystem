@@ -42,7 +42,7 @@ function BookTakenEntryTable() {
 
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-gray-900">
           {issueBooks.map((book) => (
             <tr key={book.id} className="text-slate-200">
               <td className="border p-2">{book.id}</td>

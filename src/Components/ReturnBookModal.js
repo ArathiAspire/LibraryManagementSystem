@@ -96,52 +96,54 @@ function ReturnBookModal(props) {
     );
     if (returnedBookIndex !== -1) {
       setUpdatedBook(updatedReturnedBooks[returnedBookIndex]);
+      
     }
-    console.log("updated book:",updatedBook);
+    const bookToUpdate = updatedReturnedBooks[returnedBookIndex];
+    console.log("updated book:", bookToUpdate);
     // try {
+    await fetch(
+      `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry/${bookToUpdate.id}.json`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          status: "Returned",
+          issuedTo: returnedFrom,
+          returnDate: returnDate,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(returnBook);
+
+    try {
       await fetch(
-        `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry/${updatedBook.id}.json`,
+        `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books/${returnBook[0].id}.json`,
         {
           method: "PATCH",
           body: JSON.stringify({
-            status: "Returned",
-            issuedTo: returnedFrom,
-            returnDate: returnDate,
+            status: "Available",
           }),
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
-      console.log(returnBook);
 
-      try {
-        await fetch(
-          `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books/${returnBook[0].id}.json`,
-          {
-            method: "PATCH",
-            body: JSON.stringify({
-              status: "Available",
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+      console.log("Status updated to available in books.json");
+    } catch (error) {
+      console.log("Error while updating status to available in books.json");
+    }
 
-        console.log("Status updated to available in books.json");
-      } catch (error) {
-        console.log("Error while updating status to available in books.json");
-      }
+    toast("Book Returned Successfully", {
+      hideProgressBar: true,
+      autoClose: 1000,
+      type: "success",
+      position: "top-center",
+    });
 
-      toast("Book Returned Successfully", {
-        hideProgressBar: true,
-        autoClose: 1000,
-        type: "success",
-        position: "top-center",
-      });
-
-      props.handleClose();
+    props.handleClose();
     // } catch (error) {
     //   toast("Error while returning book", {
     //     hideProgressBar: true,

@@ -5,7 +5,7 @@ const initialState = {
     isAuth: false,
     username: "",
   },
-  loginVisible:true
+  loginVisible: true,
 };
 export const auth = createSlice({
   name: "auth",
@@ -22,12 +22,11 @@ export const auth = createSlice({
         },
       };
     },
-    loginButtonVisible:(state)=>{
-      state.loginVisible=!state.loginVisible
-    }
-
+    loginButtonVisible: (state) => {
+      state.loginVisible = !state.loginVisible;
+    },
   },
 });
 
-export const { logIn, logOut,loginButtonVisible } = auth.actions;
+export const { logIn, logOut, loginButtonVisible } = auth.actions;
 export default auth.reducer;

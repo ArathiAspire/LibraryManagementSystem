@@ -71,15 +71,7 @@ function LibNavbar() {
                   Book Entries{" "}
                 </Link>
               </li>
-              {/* <li>
-                <Link
-                  className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/librarian/bookReturnEntry"
-                >
-                  <BsFillBookmarkCheckFill />
-                  Book Return Entry{" "}
-                </Link>
-              </li> */}
+              
               <li>
                 <Button
                   className="text-white hover:text-blue-300 items-center flex p-2"
@@ -106,15 +98,9 @@ function LibNavbar() {
       <Modal open={openIssue} onClose={handleCloseIssueModal}>
         <div>
           <ModalIssueBook handleClose={handleCloseIssueModal} />
-          {/* <IssueBook handleClose={handleCloseIssueModal} /> */}
         </div>
       </Modal>
 
-      {/* <Modal open={openReturn} onClose={handleCloseReturnModal}>
-        <div>
-          <ReturnBook handleClose={handleCloseReturnModal} />
-        </div>
-      </Modal> */}
       <Modal open={openReturn} onClose={handleCloseReturnModal}>
         <div>
         <ReturnBookModal handleClose={handleCloseReturnModal}/>

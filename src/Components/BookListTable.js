@@ -2,17 +2,28 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase";
+import DeleteModal from "./DeleteModal";
 
 const BookListTable = ({ libLogged }) => {
+  const [open, setOpen] = useState(false);
   const booksPerPage = 3;
   const [books, setBooks] = useState([]);
   const searchParams = useSearchParams();
   const LibLogged = searchParams.get("LibLogged");
+  const [bookId, setBookId] = useState(null);
+
+  const handleOpenDeleteModal = (id) => {
+    setOpen(true);
+    setBookId(id);
+  };
+  const handleCloseDeleteModal = () => {
+    setOpen(false);
+  };
   const [filters, setFilters] = useState({
     title: "",
     genre: "",
@@ -62,26 +73,7 @@ const BookListTable = ({ libLogged }) => {
     );
   });
 
-  const onDeleteHandler = async (id) => {
-    const proceed = window.confirm("Are you sure?");
-
-    if (proceed) {
-      const response = fetch(
-        `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books/${id}.json`,
-        { method: "DELETE" }
-      );
-      if (!response.ok) {
-        console.log("Error while deleting");
-      }
-      fetchBooks();
-      toast("Book Deleted", {
-        hideProgressBar: true,
-        autoClose: 1000,
-        type: "error",
-        position: "top-center",
-      });
-    }
-  };
+ 
 
   const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
   const startIndex = (currentPage - 1) * booksPerPage;
@@ -160,7 +152,7 @@ const BookListTable = ({ libLogged }) => {
             {/* <th className="border p-2"></th> */}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="bg-gray-800">
           {currentBooks.map((book) => (
             <tr key={book.id} className="text-slate-200">
               <td className="border p-2">{book.id}</td>
@@ -173,7 +165,8 @@ const BookListTable = ({ libLogged }) => {
                   <Button
                     color="error"
                     className="text-slate-color-red-600"
-                    onClick={() => onDeleteHandler(book.id)}
+                    onClick={() => handleOpenDeleteModal(book.id)}
+                    // onClick={() => onDeleteHandler(book.id)}
                   >
                     Delete
                   </Button>
@@ -190,6 +183,9 @@ const BookListTable = ({ libLogged }) => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
+      <Modal open={open} onClose={handleCloseDeleteModal}>
+        <DeleteModal handleCloseModal={handleCloseDeleteModal} bookId={bookId}/>
+      </Modal>
     </div>
   );
 };

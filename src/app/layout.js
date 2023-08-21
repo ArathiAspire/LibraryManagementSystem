@@ -5,6 +5,7 @@ import Footer from "@/Components/Footer/Footer";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { ReduxProvider } from "@/redux/provider";
+import styles from "./(auth)/signin/signin.module.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,15 +18,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${inter.className} bg-slate-800 text-slate-100 mx-auto  flex flex-col min-h-screen`}
+        className={`${inter.className} ${styles.loginBackground} bg-slate-800 text-slate-100 mx-auto  flex flex-col min-h-screen`}
       >
-      <ReduxProvider>
-        <ToastContainer />
-        <Navbar />
+        <ReduxProvider>
+          <ToastContainer />
+          <Navbar />
 
-        {children}
+          {children}
 
-        <Footer />
+          <Footer />
         </ReduxProvider>
       </body>
     </html>
