@@ -24,7 +24,9 @@ function ReturnBookModal(props) {
   const returnBookHandler = (e) => {
     setEnteredBook(e.target.value);
 
-    const selectedBook = returningbooks.find((b) => b.book === e.target.value);
+    const selectedBook = returningbooks.find(
+      (b) => b.book === e.target.value && b.status === "Issued"
+    );
     if (selectedBook) {
       SetBorrowersForSelectedBook([selectedBook.issuedTo]);
       setReturnedFrom(selectedBook.issuedTo);
@@ -91,15 +93,17 @@ function ReturnBookModal(props) {
     e.preventDefault();
 
     const updatedReturnedBooks = [...returningbooks];
+    console.log("====================================");
+    console.log("updated returnbook:", updatedReturnedBooks);
+    console.log("====================================");
     const returnedBookIndex = updatedReturnedBooks.findIndex(
-      (b) => b.book === enteredbook
+      (b) => b.book === enteredbook && b.status === "Issued"
     );
     if (returnedBookIndex !== -1) {
       setUpdatedBook(updatedReturnedBooks[returnedBookIndex]);
-      
     }
     const bookToUpdate = updatedReturnedBooks[returnedBookIndex];
-    console.log("updated book:", bookToUpdate);
+    console.log("updating book:", bookToUpdate);
     // try {
     await fetch(
       `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/bookEntry/${bookToUpdate.id}.json`,
@@ -144,14 +148,6 @@ function ReturnBookModal(props) {
     });
 
     props.handleClose();
-    // } catch (error) {
-    //   toast("Error while returning book", {
-    //     hideProgressBar: true,
-    //     autoClose: 1000,
-    //     type: "error",
-    //     position: "top-center",
-    //   });
-    // }
   };
   useEffect(() => {
     fetchBooks();
@@ -168,7 +164,6 @@ function ReturnBookModal(props) {
           <h3 className="text-blue-900 font-bold mx-auto">Return Book</h3>
           <TextField
             id="standard-full-width"
-            // label="Date of issue"
             type="date"
             style={{ margin: 8 }}
             onChange={returnDateHandler}

@@ -3,8 +3,6 @@
 import BookListTable from "@/Components/BookListTable";
 import ModalAddBook from "@/Components/ModalAddBook";
 import { Button, Modal } from "@mui/material";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function Admin() {
@@ -20,7 +18,7 @@ export default function Admin() {
     <div>
       <div className="px-10 py-10">
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+          className="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring focus:ring-blue-300"
           onClick={handleOpenAddBookModal}
         >
           Add Book

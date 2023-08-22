@@ -2,12 +2,25 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button, Modal } from "@mui/material";
+import {
+  Button,
+  Divider,
+  FormControl,
+  IconButton,
+  InputBase,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Paper,
+  Select,
+  TextField,
+} from "@mui/material";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase";
 import DeleteModal from "./DeleteModal";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 const BookListTable = ({ libLogged }) => {
   const [open, setOpen] = useState(false);
@@ -16,6 +29,19 @@ const BookListTable = ({ libLogged }) => {
   const searchParams = useSearchParams();
   const LibLogged = searchParams.get("LibLogged");
   const [bookId, setBookId] = useState(null);
+
+  const [selectedField, setSelectedField] = useState(""); // State to store the selected field
+  const [searchValue, setSearchValue] = useState(""); // State to store the search input
+
+  const handleFieldChange = (event) => {
+    setSelectedField(event.target.value);
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+    const { name, value } = event.target;
+    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  };
 
   const handleOpenDeleteModal = (id) => {
     setOpen(true);
@@ -73,8 +99,6 @@ const BookListTable = ({ libLogged }) => {
     );
   });
 
- 
-
   const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
   const startIndex = (currentPage - 1) * booksPerPage;
   const endIndex = startIndex + booksPerPage;
@@ -103,43 +127,56 @@ const BookListTable = ({ libLogged }) => {
       unsubscribe();
     };
   });
+  const fields = ["id", "author", "title", "genre"];
 
   return (
     <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
-      <div className="py-2 flex mx-auto">
+      <div className="py-2 flex justify-center">
         {" "}
-        <input
-          className="rounded p-2 mx-auto"
-          type="text"
-          name="title"
-          placeholder="search here by title"
-          value={filters.title}
-          onChange={handleFilterChange}
-        />
-        <input
-          className="rounded p-2 mx-auto"
-          type="text"
-          name="id"
-          placeholder="search here by id"
-          value={filters.id}
-          onChange={handleFilterChange}
-        />
-        <input
-          className="rounded p-2 mx-auto"
-          type="text"
-          name="author"
-          placeholder="search here by author name"
-          value={filters.author}
-          onChange={handleFilterChange}
-        />
-        <input
-          className="rounded p-2 mx-auto"
-          type="text"
-          name="genre"
-          placeholder="search here by genre"
-          value={filters.genre}
-          onChange={handleFilterChange}
-        />
+        <FormControl
+          style={{
+            margin: 5,
+            backgroundColor: "white",
+            color: "black",
+            width: 250,
+          }}
+        >
+          <InputLabel required>Select Field</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Select Book"
+            value={selectedField}
+            onChange={handleFieldChange}
+          >
+            {fields.map((field) => (
+              <MenuItem key={field} value={field}>
+                {field}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <Paper
+          sx={{
+            p: "1px 2px",
+            display: "flex",
+            alignItems: "center",
+            width: 250,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            type="text"
+            name={selectedField}
+            placeholder={`search by ${selectedField ? selectedField : 'id/title/author/genre'}`}
+            value={searchValue}
+            onChange={handleSearchChange}
+          />
+          <IconButton type="button" sx={{ p: "7px" }} aria-label="search">
+            <SearchOutlinedIcon />
+          </IconButton>
+        </Paper>
+
       </div>
       <table className="min-w-full border border-gray-300">
         <thead>
@@ -184,7 +221,10 @@ const BookListTable = ({ libLogged }) => {
         setCurrentPage={setCurrentPage}
       />
       <Modal open={open} onClose={handleCloseDeleteModal}>
-        <DeleteModal handleCloseModal={handleCloseDeleteModal} bookId={bookId}/>
+        <DeleteModal
+          handleCloseModal={handleCloseDeleteModal}
+          bookId={bookId}
+        />
       </Modal>
     </div>
   );
