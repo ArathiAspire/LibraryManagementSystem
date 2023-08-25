@@ -35,4 +35,13 @@ export const students=[
       email:"anu@gmail.com",
       contact:986674872
     },
+    {
+      id:5,
+      firstName:'Mathew',
+      lastName:'Boby',
+      department:'IT',
+      batch:2018,
+      email:"mathew@gmail.com",
+      contact:986674872
+    },
   ]
