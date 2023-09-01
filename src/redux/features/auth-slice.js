@@ -6,6 +6,8 @@ const initialState = {
     username: "",
   },
   loginVisible: true,
+  adminLoginpage: false,
+  librarianLoginpage: false,
 };
 export const auth = createSlice({
   name: "auth",
@@ -25,8 +27,21 @@ export const auth = createSlice({
     loginButtonVisible: (state) => {
       state.loginVisible = !state.loginVisible;
     },
+    adminLogin: (state) => {
+      state.adminLoginpage = true;
+    },
+    adminLoginReset:(state)=>{
+      state.adminLoginpage=false
+    },
+    librarianLoginReset:(state)=>{
+      state.librarianLoginpage=false
+    },
+    librarianLogin: (state) => {
+      state.librarianLoginpage = true;
+    },
   },
 });
 
-export const { logIn, logOut, loginButtonVisible } = auth.actions;
+export const { logIn, logOut, loginButtonVisible, adminLogin, librarianLogin,adminLoginReset,librarianLoginReset } =
+  auth.actions;
 export default auth.reducer;

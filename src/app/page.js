@@ -1,11 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
 import backgroundImage from "public/home3.jpg";
 import Image from "next/image";
 import styles from "./(auth)/signin/signin.module.css";
 import { Button } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { adminLogin, librarianLogin,adminLoginReset,librarianLoginReset } from "@/redux/features/auth-slice";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const onAdminClickHandler = () => {
+    dispatch(adminLogin());
+    dispatch(librarianLoginReset())
+  };
+  const onLibrarianClickHandler = () => {
+    dispatch(librarianLogin());
+    dispatch(adminLoginReset())
+
+  };
   return (
     <>
       <header
@@ -20,17 +34,23 @@ const Home = () => {
           <div className="text-center text-white  text-l p-4">
             <p className="font-bold italic">Sign in as</p>
             <div className="mt-2">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md mr-2">
+              <button
+                onClick={onAdminClickHandler}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md mr-2"
+              >
                 <Link href="/signin">Admin</Link>
               </button>
-              <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-md">
+              <button
+                onClick={onLibrarianClickHandler}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-md"
+              >
                 <Link href="/signin">Librarian</Link>
               </button>
             </div>
-            <p className="italic">new user?</p>
+            {/* <p className="italic">new user?</p>
             <Link className="text-gray-300" href="/signup">
               Sign up
-            </Link>
+            </Link> */}
           </div>
         </div>
         <Image src={backgroundImage} alt="" width="2000" />
