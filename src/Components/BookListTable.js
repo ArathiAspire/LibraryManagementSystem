@@ -21,9 +21,14 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase";
 import DeleteModal from "./DeleteModal";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import DeleteForeverSharpIcon from "@mui/icons-material/DeleteForeverSharp";
+import EditIcon from "@mui/icons-material/Edit";
+import ModalEditBook from "./ModalEditBook";
 
 const BookListTable = ({ libLogged }) => {
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
   const booksPerPage = 3;
   const [books, setBooks] = useState([]);
   const searchParams = useSearchParams();
@@ -128,7 +133,17 @@ const BookListTable = ({ libLogged }) => {
     };
   });
   const fields = ["id", "author", "title", "genre"];
-
+  const handleOpenEditModal = (id) => {
+    setOpenEdit(true);
+  };
+  const handleCloseEditModal = () => {
+    setOpenEdit(false);
+  };
+  const [editBookId, setEditBookId] = useState("");
+  const onEditBookHandler = (id) => {
+    setEditBookId(id);
+    handleOpenEditModal();
+  };
   return (
     <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
       <div className="py-2 flex justify-center">
@@ -168,7 +183,9 @@ const BookListTable = ({ libLogged }) => {
             sx={{ ml: 1, flex: 1 }}
             type="text"
             name={selectedField}
-            placeholder={`search by ${selectedField ? selectedField : 'id/title/author/genre'}`}
+            placeholder={`search by ${
+              selectedField ? selectedField : "id/title/author/genre"
+            }`}
             value={searchValue}
             onChange={handleSearchChange}
           />
@@ -176,7 +193,6 @@ const BookListTable = ({ libLogged }) => {
             <SearchOutlinedIcon />
           </IconButton>
         </Paper>
-
       </div>
       <table className="min-w-full border border-gray-300">
         <thead>
@@ -198,14 +214,17 @@ const BookListTable = ({ libLogged }) => {
               <td className="border p-2">{book.genre}</td>
               <td className="border p-2">{book.status}</td>
               {adminLogged && (
-                <td className="border p-2">
+                <td className="border">
                   <Button
                     color="error"
-                    className="text-slate-color-red-600"
+                    startIcon={<DeleteForeverSharpIcon />}
                     onClick={() => handleOpenDeleteModal(book.id)}
-                    // onClick={() => onDeleteHandler(book.id)}
+                  ></Button>
+                  <Button
+                    color="warning"
+                    onClick={() => onEditBookHandler(book.id)}
                   >
-                    Delete
+                    <EditIcon />
                   </Button>
                 </td>
               )}
@@ -224,6 +243,12 @@ const BookListTable = ({ libLogged }) => {
         <DeleteModal
           handleCloseModal={handleCloseDeleteModal}
           bookId={bookId}
+        />
+      </Modal>
+      <Modal open={openEdit} onClose={handleCloseEditModal}>
+        <ModalEditBook
+          handleCloseModal={handleCloseEditModal}
+          editBook={currentBooks.find((book) => book.id === editBookId)}
         />
       </Modal>
     </div>

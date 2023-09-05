@@ -1,40 +1,40 @@
-import Link from "next/link";
-import { use } from "react";
+"use client";
+import { use, useState } from "react";
 import StudentListTable from "../../../../Components/StudentListTable";
 import { students } from "@/api/students";
-// https://rickandmortyapi.com/api/character
-// https://jsonplaceholder.typicode.com/users
-
-// const URL="https://jsonplaceholder.typicode.com/users"
-
-// const URL="https://jsonplaceholder.typicode.com/users"
-// async function getStudents() {
-//   return await (
-//     await fetch(URL)
-//   ).json();
-// }
-
-
+import { Button, Modal } from "@mui/material";
+import ModalAddStudents from "@/Components/ModalAddStudents";
 
 const StudentList = () => {
-  // const allStudents = use(getStudents());
+  const [open, setOpen] = useState(false);
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+  const onAddStudentHandler = () => {
+    handleOpenModal();
+  };
   return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Student List</h1>
-      <StudentListTable students={students}/>
-      {/* {allStudents?.map((c) => (
-        <ul key={c.id}>
-          <Link href={c.name}>
-            <li>{c.name}</li>
-          </Link>
-        </ul>
-      ))} */}
+    <div className="p-5 bg-gray-900">
+      <h1 className="text-2xl font-semibold mb-4 text-center">Student List</h1>
+      <div className="text-center p-4">
+        <Button
+          color="primary"
+          variant="contained"
+          className="text-center bg-gray"
+          onClick={onAddStudentHandler}
+        >
+          Add Students
+        </Button>
+      </div>
+      <StudentListTable students={students} />
+      <Modal open={open} onClose={handleCloseModal}>
+        <ModalAddStudents handleCloseModal={handleCloseModal}/>
+      </Modal>
     </div>
   );
 };
 
 export default StudentList;
-
-// const response=await fetch('../api');
-//         const data=await response.json()
-//         console.log(data),

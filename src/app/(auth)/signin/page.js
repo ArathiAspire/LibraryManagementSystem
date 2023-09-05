@@ -16,9 +16,7 @@ const LoginForm = () => {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const adminLoginpage = useSelector(
-    (state) => state.authReducer.adminLoginpage
-  );
+  const adminLoginpage=useSelector((state)=>state.authReducer.adminLoginpage)
 
   const dispatch = useDispatch();
 
@@ -69,7 +67,8 @@ const LoginForm = () => {
           });
           router.push("/librarian");
         }
-        dispatch(logIn(email));
+        dispatch(logIn(email))
+
       })
       .catch((error) => {
         toast("Error while signing in", {
@@ -86,9 +85,7 @@ const LoginForm = () => {
       className={`${styles.loginBackground} bg-gray-100 flex justify-center items-center h-screen`}
     >
       <div className="bg-white p-8 rounded shadow-md w-96  text-slate-900">
-        <h4 className="text-2xl font-semibold mb-4">
-          {adminLoginpage ? "Admin " : "Librarian"} Login Page{" "}
-        </h4>
+        <h4 className="text-2xl font-semibold mb-4">Login Page </h4>
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">

@@ -3,7 +3,7 @@ import BookTakenEntryTable from './BookTakenEntryTable'
 
 function page() {
   return (
-    <div><BookTakenEntryTable/></div>
+    <div className='p-8'><BookTakenEntryTable/></div>
   )
 }
 

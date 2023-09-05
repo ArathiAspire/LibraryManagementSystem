@@ -94,7 +94,7 @@ function BookTakenEntryTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - issueBooks.length) : 0;
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -153,7 +153,7 @@ function BookTakenEntryTable() {
                   style={{
                     minWidth: column.minWidth,
                     fontWeight: "bold", // Add this line for bold text
-                    fontSize: "1rem", // Add this line for adjusting font size
+                    fontSize: "18px", // Add this line for adjusting font size
                   }}
                 >
                   {column.label}
@@ -170,22 +170,40 @@ function BookTakenEntryTable() {
               : issueBooks
             ).map((book) => (
               <TableRow key={book.id}>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell
+                  style={{ width: 160, fontSize: "15px" }}
+                  align="right"
+                >
                   {book.id}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell
+                  style={{ width: 160, fontSize: "15px" }}
+                  align="right"
+                >
                   {book.book}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell
+                  style={{ width: 160, fontSize: "15px" }}
+                  align="right"
+                >
                   {book.borrower}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell
+                  style={{ width: 160, fontSize: "15px" }}
+                  align="right"
+                >
                   {book.issueDate}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell
+                  style={{ width: 160, fontSize: "15px" }}
+                  align="right"
+                >
                   {book.status}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="right">
+                <TableCell
+                  style={{ width: 160, fontSize: "15px" }}
+                  align="right"
+                >
                   {book.returnDate}
                 </TableCell>
               </TableRow>

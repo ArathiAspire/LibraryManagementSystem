@@ -28,7 +28,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useRef } from "react";
-import { logOut,adminLoginReset,librarianLoginReset } from "@/redux/features/auth-slice";
+import { logOut } from "@/redux/features/auth-slice";
 import { useDispatch } from "react-redux";
 import { green } from "@mui/material/colors";
 
@@ -129,10 +129,6 @@ export default function Navbar() {
       });
       dispatch(logOut())
   };
-  const onLoginpageReset=()=>{
-    dispatch(adminLoginReset())
-    dispatch(librarianLoginReset())
-  }
   const userMenu = (
     <div>
       <IconButton
@@ -192,7 +188,7 @@ export default function Navbar() {
           )}
         </Typography>
         <ul className={`${classes.title} flex space-x-10 pr-20 space-around`}>
-          <li onClick={onLoginpageReset}>
+          <li>
             <Link href="/" className="text-white hover-text-blue">
               Home
             </Link>

@@ -30,11 +30,11 @@ export const auth = createSlice({
     adminLogin: (state) => {
       state.adminLoginpage = true;
     },
-    adminLoginReset:(state)=>{
-      state.adminLoginpage=false
+    adminLoginReset: (state) => {
+      state.adminLoginpage = false;
     },
-    librarianLoginReset:(state)=>{
-      state.librarianLoginpage=false
+    librarianLoginReset: (state) => {
+      state.librarianLoginpage = false;
     },
     librarianLogin: (state) => {
       state.librarianLoginpage = true;
@@ -42,6 +42,13 @@ export const auth = createSlice({
   },
 });
 
-export const { logIn, logOut, loginButtonVisible, adminLogin, librarianLogin,adminLoginReset,librarianLoginReset } =
-  auth.actions;
+export const {
+  logIn,
+  logOut,
+  loginButtonVisible,
+  adminLogin,
+  librarianLogin,
+  adminLoginReset,
+  librarianLoginReset,
+} = auth.actions;
 export default auth.reducer;
