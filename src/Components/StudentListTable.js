@@ -1,7 +1,9 @@
 "use client";
 import {
   Box,
+  Button,
   IconButton,
+  Modal,
   Paper,
   Table,
   TableBody,
@@ -11,13 +13,21 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
   useTheme,
 } from "@mui/material";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import PropTypes from "prop-types";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/app/firebase";
+import DeleteForeverSharpIcon from "@mui/icons-material/DeleteForeverSharp";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteModal from "./DeleteModal";
+import ModalEditBook from "./ModalEditBook";
+import ModalEditStudent from "./ModalEditStudent";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -102,9 +112,27 @@ const StudentListTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+  const [adminLogged, setAdminLogged] = useState(false);
+  const [librarianLogged, setLibrarianLogged] = useState(false);
   useEffect(() => {
-    fetchStudents();
-  }, [students]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userEmail = user.email;
+        if (userEmail === "admin@gmail.com") {
+          setAdminLogged(true);
+        } else {
+          setLibrarianLogged(true);
+        }
+      } else {
+        setAdminLogged(false);
+        setLibrarianLogged(false);
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  });
+
   const fetchStudents = async () => {
     const response = await fetch(
       "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/students.json"
@@ -118,17 +146,18 @@ const StudentListTable = () => {
         lname: data[key].lname,
         batch: data[key].batch,
         department: data[key].dept,
-        contact:data[key].contact,
-        email:data[key].email
+        contact: data[key].contact,
+        email: data[key].email,
       });
     }
     setStudents(loadedStudents);
   };
   useEffect(() => {
     fetchStudents();
-  }, []);
+  }, [students]);
+
   const columns = [
-    { id: "ID",maxWidth: 5, label: "ID",  align: "right" },
+    { id: "ID", maxWidth: 5, label: "ID", align: "right" },
     { id: "Full Name", label: "Full Name", minWidth: 200, align: "right" },
     { id: "Email", label: "Email", minWidth: 170, align: "right" },
     { id: "Contact", label: "Contact", minWidth: 170, align: "right" },
@@ -139,9 +168,34 @@ const StudentListTable = () => {
       align: "right",
     },
     { id: "Batch", label: "Batch", minWidth: 170, align: "right" },
+    librarianLogged && {
+      id: "actions",
+      label: "",
+      minWidth: 170,
+      align: "right",
+    },
   ];
-  
-
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [studentId, setStudentId] = useState(null);
+  const [editStudentId, setEditStudentId] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenDeleteModal = (id) => {
+    setOpenDeleteModal(true);
+    setStudentId(id);
+  };
+  const handleCloseDeleteModal = () => {
+    setOpenDeleteModal(false);
+  };
+  const handleOpenEditModal = (id) => {
+    setOpenEdit(true);
+  };
+  const handleCloseEditModal = () => {
+    setOpenEdit(false);
+  };
+  const onEditStudentHandler = (id) => {
+    setEditStudentId(id);
+    handleOpenEditModal();
+  };
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer component={Paper}>
@@ -170,13 +224,13 @@ const StudentListTable = () => {
                   page * rowsPerPage + rowsPerPage
                 )
               : students
-            ).map((student,index) => (
+            ).map((student, index) => (
               <TableRow key={student.id}>
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
                   align="right"
                 >
-                  {index+1}
+                  {index + 1}
                 </TableCell>
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
@@ -184,7 +238,7 @@ const StudentListTable = () => {
                 >
                   {student.fname} {student.lname}
                 </TableCell>
-               
+
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
                   align="right"
@@ -209,6 +263,28 @@ const StudentListTable = () => {
                 >
                   {student.batch}
                 </TableCell>
+                {librarianLogged && (
+                  <TableCell
+                    style={{ width: 160, fontSize: "15px" }}
+                    align="right"
+                  >
+                    <Tooltip title="remove student">
+                      <Button
+                        color="error"
+                        startIcon={<DeleteForeverSharpIcon />}
+                        onClick={() => handleOpenDeleteModal(student.id)}
+                      ></Button>
+                    </Tooltip>
+                    <Tooltip title="edit student details">
+                      <Button
+                        color="warning"
+                        onClick={() => onEditStudentHandler(student.id)}
+                      >
+                        <EditIcon />
+                      </Button>
+                    </Tooltip>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
             {emptyRows > 0 && (
@@ -239,37 +315,20 @@ const StudentListTable = () => {
           </TableFooter>
         </Table>
       </TableContainer>
+      <Modal open={openDeleteModal} onClose={handleCloseDeleteModal}>
+        <DeleteModal
+          handleCloseModal={handleCloseDeleteModal}
+          studentId={studentId}
+        />
+      </Modal>
+      <Modal open={openEdit} onClose={handleCloseEditModal}>
+        <ModalEditStudent
+          handleCloseModal={handleCloseEditModal}
+          editStudent={students.find((student) => student.id === editStudentId)}
+        />
+
+      </Modal>
     </Paper>
-    // <div className="w-full overflow-x-auto text-slate-900 p-8">
-    //   <table className="min-w-full border border-gray-300">
-    //     <thead>
-    //       <tr className="bg-gray-100">
-    //         <th className="border p-2"></th>
-    //         <th className="border p-2"></th>
-    //         <th className="border p-2"></th>
-    //         <th className="border p-2"></th>
-    //         <th className="border p-2"></th>
-    //         <th className="border p-2"></th>
-    //         <th className="border p-2"></th>
-    //       </tr>
-    //     </thead>
-    //     <tbody className="bg-gray-900">
-    //       {students.map((student) => (
-    //         <tr key={student.id} className="text-slate-200">
-    //           <td className="border p-2">{student.id}</td>
-
-    //           <td className="border p-2">{student.firstName}</td>
-    //           <td className="border p-2">{student.lastName}</td>
-    //           <td className="border p-2">{student.email}</td>
-
-    //           <td className="border p-2">{student.contact}</td>
-    //           <td className="border p-2">{student.department}</td>
-    //           <td className="border p-2">{student.batch}</td>
-    //         </tr>
-    //       ))}
-    //     </tbody>
-    //   </table>
-    // </div>
   );
 };
 

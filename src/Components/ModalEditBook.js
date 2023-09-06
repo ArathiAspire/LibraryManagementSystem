@@ -22,30 +22,7 @@ const ModalEditBook = ({ handleCloseModal, editBook }) => {
 
   const handleAddBook = async (e) => {
     e.preventDefault();
-    
-    const response = await fetch(
-      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books.json"
-    );
-    const data = await response.json();
-    var flag = false;
-    for (const key in data) {
-      if (data[key].title === title) {
-        flag = true;
-        toast("Book already exists", {
-          hideProgressBar: true,
-          autoClose: 1000,
-          type: "warning",
-          position: "bottom-left",
-        });
 
-        setTitle("");
-        setGenre("");
-        setAuthor("");
-        break;
-      }
-    }
-
-    if (!flag) {
       const updatedBooks = {
         title: title,
         author: author,
@@ -75,7 +52,7 @@ const ModalEditBook = ({ handleCloseModal, editBook }) => {
       setGenre("");
       setAuthor("");
       handleCloseModal();
-    }
+    
   };
   const handleClose = () => {
     handleCloseModal();
