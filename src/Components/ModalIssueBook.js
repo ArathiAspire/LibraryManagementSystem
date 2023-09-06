@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useState, useEffect } from "react";
-import { students } from "@/api/students";
+// import { students } from "@/api/students";
 import { toast } from "react-toastify";
 
 function ModalIssueBook(props) {
@@ -32,7 +32,31 @@ function ModalIssueBook(props) {
     console.log(books);
   };
   const [books, setBooks] = useState([]);
+  const [students,setStudents]=useState([])
   const [availableBooks, setAvailableBooks] = useState([]);
+
+  const fetchStudents = async () => {
+    const response = await fetch(
+      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/students.json"
+    );
+    const data = await response.json();
+    const loadedStudents = [];
+    for (const key in data) {
+      loadedStudents.push({
+        id: key,
+        fname: data[key].fname,
+        lname: data[key].lname,
+        batch: data[key].batch,
+        department: data[key].dept,
+        contact:data[key].contact,
+        email:data[key].email
+      });
+    }
+    setStudents(loadedStudents);
+  };
+  useEffect(() => {
+    fetchStudents();
+  }, []);
 
   const fetchBooks = async () => {
     const response = await fetch(
@@ -83,13 +107,7 @@ function ModalIssueBook(props) {
 
   const issueBook = books.filter((b) => b.title === book);
 
-  // const booksNotIssued = [];
-  // books.forEach((book) => {
-  //   const title = book.title;
-  //   if (!issuedBooks.some((entry) => entry.book === title)) {
-  //     booksNotIssued.push(book);
-  //   }
-  // });
+ 
 
   const bookIssueHandler = async (e) => {
     e.preventDefault();
@@ -183,8 +201,8 @@ function ModalIssueBook(props) {
               onChange={borrowerHandler}
             >
               {students.map((student) => (
-                <MenuItem key={student.id} value={student.firstName}>
-                  {student.firstName}
+                <MenuItem key={student.id} value={student.fname+student.lname}>
+                  {student.fname} {student.lname}
                 </MenuItem>
               ))}
             </Select>

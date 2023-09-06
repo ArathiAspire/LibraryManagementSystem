@@ -128,9 +128,8 @@ const StudentListTable = () => {
     fetchStudents();
   }, []);
   const columns = [
-    { id: "ID", label: "ID", minWidth: 170, align: "right" },
-    { id: "First Name", label: "First Name", minWidth: 170, align: "right" },
-    { id: "Last Name", label: "Last Name", minWidth: 170, align: "right" },
+    { id: "ID",maxWidth: 5, label: "ID",  align: "right" },
+    { id: "Full Name", label: "Full Name", minWidth: 200, align: "right" },
     { id: "Email", label: "Email", minWidth: 170, align: "right" },
     { id: "Contact", label: "Contact", minWidth: 170, align: "right" },
     {
@@ -141,6 +140,8 @@ const StudentListTable = () => {
     },
     { id: "Batch", label: "Batch", minWidth: 170, align: "right" },
   ];
+  
+
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer component={Paper}>
@@ -169,26 +170,21 @@ const StudentListTable = () => {
                   page * rowsPerPage + rowsPerPage
                 )
               : students
-            ).map((student) => (
+            ).map((student,index) => (
               <TableRow key={student.id}>
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
                   align="right"
                 >
-                  {student.id}
+                  {index+1}
                 </TableCell>
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
                   align="right"
                 >
-                  {student.fname}
+                  {student.fname} {student.lname}
                 </TableCell>
-                <TableCell
-                  style={{ width: 160, fontSize: "15px" }}
-                  align="right"
-                >
-                  {student.lname}
-                </TableCell>
+               
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
                   align="right"
