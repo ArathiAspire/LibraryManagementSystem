@@ -16,12 +16,12 @@ function Sidebar() {
         </li>
         <li className="flex justify-start items-center hover:bg-gray-200 hover:text-slate-800 p-2 ">
           <PiUsersThreeFill className="mr-2" />
-          <Link href="/admin/studentList">View Students</Link>
+          <Link href="/admin/studentlist">View Students</Link>
         </li>
       
         <li className="flex justify-start items-center hover:bg-gray-200 hover:text-slate-800 p-2 ">
           <MdPersonAddAlt1 className="mr-2" />
-          <Link href="/admin/addLibrarian">Add Librarian</Link>
+          <Link href="/admin/addlibrarian">Add Librarian</Link>
         </li>
         
       </ul>

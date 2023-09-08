@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Checkbox,
   IconButton,
   Paper,
   Table,
@@ -19,6 +20,8 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import React, { useState, useEffect } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import PropTypes from "prop-types";
+
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -128,7 +131,9 @@ function BookTakenEntryTable() {
     fetchIssueBooks();
   }, [issueBooks]);
   const columns = [
-    { id: "SL No.", label: "SL No.", minWidth: 170, align: "right" },
+    { id: "returned", label: "", minWidth: 10, align: "right" },
+
+    { id: "SL No.", label: "SL No.", minWidth: 100, align: "right" },
     { id: "Book", label: "Book", minWidth: 170, align: "right" },
     { id: "Issued to", label: "Issued to", minWidth: 170, align: "right" },
     { id: "Issued Date", label: "Issued Date", minWidth: 170, align: "right" },
@@ -140,6 +145,15 @@ function BookTakenEntryTable() {
       align: "right",
     },
   ];
+  
+  const [disableRow,setDisabledRow]=useState({})
+  const handleCheck = (id) => {
+    setDisabledRow((prevDisabledRow)=>({
+      ...prevDisabledRow,
+      [id]:!prevDisabledRow[id]
+    }))
+    
+  };
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer component={Paper}>
@@ -171,8 +185,19 @@ function BookTakenEntryTable() {
             ).map((book) => (
               <TableRow key={book.id}>
                 <TableCell
-                  style={{ width: 160, fontSize: "15px" }}
+                  style={{ width: 10, fontSize: "15px" }}
                   align="right"
+                >
+                  <Checkbox
+                    {...label}
+                    disabled={disableRow[book.id]}
+                    onChange={() => handleCheck(book.id)}
+                  />
+                </TableCell>
+
+                <TableCell
+                  style={{ width: 1, fontSize: "15px" }}
+                  align="center"
                 >
                   {book.id}
                 </TableCell>
@@ -237,33 +262,6 @@ function BookTakenEntryTable() {
         </Table>
       </TableContainer>
     </Paper>
-    // <div className="w-full overflow-x-auto text-slate-900 p-8">
-    //   <table className="min-w-full border border-gray-300">
-    //     <thead>
-    //       <tr className="bg-gray-100">
-    //         <th className="border p-2">SL No.</th>
-    //         <th className="border p-2">Book</th>
-    //         <th className="border p-2">Issued to</th>
-    //         <th className="border p-2">Issued Date</th>
-    //         <th className="border p-2">Status</th>
-    //         <th className="border p-2">Returned Date</th>
-
-    //       </tr>
-    //     </thead>
-    //     <tbody className="bg-gray-900">
-    //       {issueBooks.map((book) => (
-    //         <tr key={book.id} className="text-slate-200">
-    //           <td className="border p-2">{book.id}</td>
-    //           <td className="border p-2">{book.book}</td>
-    //           <td className="border p-2">{book.borrower}</td>
-    //           <td className="border p-2">{book.issueDate}</td>
-    //           <td className="border p-2">{book.status}</td>
-    //           <td className="border p-2">{book.returnDate}</td>
-    //         </tr>
-    //       ))}
-    //     </tbody>
-    //   </table>
-    // </div>
   );
 }
 

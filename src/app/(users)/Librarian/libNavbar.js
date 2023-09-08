@@ -47,7 +47,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/librarian/bookList"
+                  href="/librarian/booklist"
                 >
                   <SiBookstack />
                   Books{" "}
@@ -56,7 +56,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/librarian/studentList"
+                  href="/librarian/studentlist"
                 >
                   <PiStudentBold />
                   Students{" "}
@@ -65,7 +65,7 @@ function LibNavbar() {
               <li>
                 <Link
                   className="text-white hover:text-blue-300 items-center flex p-2"
-                  href="/librarian/bookEntries"
+                  href="/librarian/bookentries"
                 >
                   <BsFillBookmarkDashFill />
                   Book Entries{" "}

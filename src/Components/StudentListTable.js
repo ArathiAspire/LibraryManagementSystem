@@ -139,9 +139,10 @@ const StudentListTable = () => {
     );
     const data = await response.json();
     const loadedStudents = [];
+    let id=1
     for (const key in data) {
       loadedStudents.push({
-        id: key,
+        id: id,
         fname: data[key].fname,
         lname: data[key].lname,
         batch: data[key].batch,
@@ -149,6 +150,7 @@ const StudentListTable = () => {
         contact: data[key].contact,
         email: data[key].email,
       });
+      id++
     }
     setStudents(loadedStudents);
   };
@@ -224,13 +226,13 @@ const StudentListTable = () => {
                   page * rowsPerPage + rowsPerPage
                 )
               : students
-            ).map((student, index) => (
+            ).map((student) => (
               <TableRow key={student.id}>
                 <TableCell
-                  style={{ width: 160, fontSize: "15px" }}
+                  style={{ width: 10, fontSize: "15px" }}
                   align="right"
                 >
-                  {index + 1}
+                  {student.id}
                 </TableCell>
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}

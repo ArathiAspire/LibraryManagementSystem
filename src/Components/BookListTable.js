@@ -24,6 +24,7 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import DeleteForeverSharpIcon from "@mui/icons-material/DeleteForeverSharp";
 import EditIcon from "@mui/icons-material/Edit";
 import ModalEditBook from "./ModalEditBook";
+import { CheckBox } from "@mui/icons-material";
 
 const BookListTable = ({ libLogged }) => {
   const [open, setOpen] = useState(false);
@@ -37,15 +38,31 @@ const BookListTable = ({ libLogged }) => {
 
   const [selectedField, setSelectedField] = useState(""); // State to store the selected field
   const [searchValue, setSearchValue] = useState(""); // State to store the search input
+  const [searchtitle, setSearchtitle] = useState("");
+  const [searchauthor, setSearchauthor] = useState("");
+  const [searchgenre, setSearchgenre] = useState("");
+  const [searchavailability, setSearchavailability] = useState("");
 
-  const handleFieldChange = (event) => {
-    setSelectedField(event.target.value);
+  // const handleFieldChange = (event) => {
+  //   setSelectedField(event.target.value);
+  // };
+
+  // const handleSearchChange = (event) => {
+  //   setSearchValue(event.target.value);
+  //   const { name, value } = event.target;
+  //   setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  // };
+  const handleSearchTitle = (event) => {
+    setSearchtitle(event.target.value);
   };
-
-  const handleSearchChange = (event) => {
-    setSearchValue(event.target.value);
-    const { name, value } = event.target;
-    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  const handleSearchAuthor = (event) => {
+    setSearchauthor(event.target.value);
+  };
+  const handleSearchGenre = (event) => {
+    setSearchgenre(event.target.value);
+  };
+  const handleSearchAvailability = (event) => {
+    setSearchavailability(event.target.value);
   };
 
   const handleOpenDeleteModal = (id) => {
@@ -55,54 +72,69 @@ const BookListTable = ({ libLogged }) => {
   const handleCloseDeleteModal = () => {
     setOpen(false);
   };
-  const [filters, setFilters] = useState({
-    title: "",
-    genre: "",
-    id: "",
-    author: "",
-  });
+  // const [filters, setFilters] = useState({
+  //   title: "",
+  //   genre: "",
+  //   id: "",
+  //   author: "",
+  // });
   useEffect(() => {
     fetchBooks();
   }, [books]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const handleFilterChange = (event) => {
-    const { name, value } = event.target;
-    setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
-  };
+  // const handleFilterChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
+  // };
   const fetchBooks = async () => {
     const response = await fetch(
       "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books.json"
     );
     const data = await response.json();
     const loadedBooks = [];
+    let id = 1;
     for (const key in data) {
       loadedBooks.push({
-        id: key,
+        id: id,
         title: data[key].title,
         author: data[key].author,
         genre: data[key].genre,
         status: data[key].status,
       });
+      id++;
     }
     setBooks(loadedBooks);
   };
   useEffect(() => {
     fetchBooks();
   }, []);
-
   const filteredBooks = books.filter((book) => {
-    const { title, genre, id, author } = filters;
-    return (
-      (title === "" ||
-        book.title.toLowerCase().includes(title.toLowerCase())) &&
-      (genre === "" || book.genre.toLowerCase() === genre.toLowerCase()) &&
-      (id === "" ||
-        book.id.toLowerCase().toString().includes(id.toLowerCase())) &&
-      (author === "" ||
-        book.author.toLowerCase().includes(author.toLowerCase()))
-    );
+    const titleMatch =
+      searchtitle == "" ||
+      book.title.toLowerCase().includes(searchtitle.toLowerCase());
+    const authorMatch =
+      searchauthor == "" ||
+      book.author.toLowerCase().includes(searchauthor.toLowerCase());
+    const genreMatch =
+      searchgenre == "" ||
+      book.genre.toLowerCase().includes(searchgenre.toLowerCase());
+    const availablilityMatch =
+      searchavailability == "" || book.status === searchavailability;
+    return titleMatch && authorMatch && genreMatch && availablilityMatch;
   });
+  // const filteredBooks = books.filter((book) => {
+  //   const { title, genre, id, author } = filters;
+  //   return (
+  //     (title === "" ||
+  //       book.title.toLowerCase().includes(title.toLowerCase())) &&
+  //     (genre === "" || book.genre.toLowerCase() === genre.toLowerCase()) &&
+  //     (id === "" ||
+  //       book.id.toLowerCase().toString().includes(id.toLowerCase())) &&
+  //     (author === "" ||
+  //       book.author.toLowerCase().includes(author.toLowerCase()))
+  //   );
+  // });
 
   const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
   const startIndex = (currentPage - 1) * booksPerPage;
@@ -148,7 +180,7 @@ const BookListTable = ({ libLogged }) => {
     <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
       <div className="py-2 flex justify-center">
         {" "}
-        <FormControl
+        {/* <FormControl
           style={{
             margin: 5,
             backgroundColor: "white",
@@ -192,6 +224,78 @@ const BookListTable = ({ libLogged }) => {
           <IconButton type="button" sx={{ p: "7px" }} aria-label="search">
             <SearchOutlinedIcon />
           </IconButton>
+        </Paper> */}
+        <Paper
+          sx={{
+            p: "1px 2px",
+            display: "flex",
+            alignItems: "center",
+            width: 200,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            type="text"
+            placeholder="Search by title"
+            value={searchtitle}
+            onChange={handleSearchTitle}
+          />
+        </Paper>
+        <Paper
+          sx={{
+            p: "1px 2px",
+            display: "flex",
+            alignItems: "center",
+            width: 200,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            type="text"
+            placeholder="Search by author"
+            value={searchauthor}
+            onChange={handleSearchAuthor}
+          />
+        </Paper>
+        <Paper
+          sx={{
+            p: "1px 2px",
+            display: "flex",
+            alignItems: "center",
+            width: 200,
+          }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            type="text"
+            placeholder="Search by genre"
+            value={searchgenre}
+            onChange={handleSearchGenre}
+          />
+        </Paper>
+        <Paper
+          sx={{
+            p: "1px 2px",
+            display: "flex",
+            alignItems: "center",
+            width: 200,
+          }}
+        >
+          <FormControl fullWidth>
+            <InputLabel>Select By Availability</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={searchavailability}
+              label="Borrower"
+              onChange={handleSearchAvailability}
+            >
+              <MenuItem value=""></MenuItem>
+
+              <MenuItem value="Available">Available</MenuItem>
+              <MenuItem value="Not Available">Not Available</MenuItem>
+            </Select>
+          </FormControl>
         </Paper>
       </div>
       <table className="min-w-full border border-gray-300">
@@ -234,7 +338,7 @@ const BookListTable = ({ libLogged }) => {
       </table>
       <Pagination
         booksPerPage={booksPerPage}
-        totalBooks={filteredBooks.length}
+        totalBooks={books.length}
         paginate={paginate}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

@@ -201,7 +201,7 @@ function ModalIssueBook(props) {
               onChange={borrowerHandler}
             >
               {students.map((student) => (
-                <MenuItem key={student.id} value={student.fname+student.lname}>
+                <MenuItem key={student.id} value={student.fname+ '' +student.lname}>
                   {student.fname} {student.lname}
                 </MenuItem>
               ))}

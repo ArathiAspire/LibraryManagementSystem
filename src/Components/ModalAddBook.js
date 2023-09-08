@@ -36,10 +36,6 @@ const ModalAddBook = (props) => {
           type: "warning",
           position: "bottom-left",
         });
-
-        setTitle("");
-        setGenre("");
-        setAuthor("");
         break;
       }
     }
