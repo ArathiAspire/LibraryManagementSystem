@@ -1,7 +1,7 @@
 "use client";
 import { use, useState } from "react";
 import StudentListTable from "../../../../Components/StudentListTable";
-import { students } from "@/api/students";
+import { students } from "@/app/api/students";
 import { Button, Modal } from "@mui/material";
 import ModalAddStudents from "@/Components/ModalAddStudents";
 

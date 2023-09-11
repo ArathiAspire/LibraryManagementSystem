@@ -50,6 +50,8 @@ const LoginForm = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+        
+        
         if (email === "admin@gmail.com") {
           router.push("/admin");
           toast("Admin signed in successfully", {

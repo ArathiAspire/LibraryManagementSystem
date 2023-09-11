@@ -20,6 +20,20 @@ export default function Signup() {
           type: "success",
           position: "top-center",
         });
+        const userDetails = {       
+          email: email,
+          role:'admin'
+        };
+        fetch(
+          "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/userDetails.json",
+          {
+            method: "POST",
+            body: JSON.stringify(userDetails),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         router.push('/signin')
       
       })

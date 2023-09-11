@@ -4,47 +4,71 @@ import { useState } from "react";
 import { auth } from "@/app/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+// import setLibrarianRole from "@/setClaims";
 
 export default function AddLibrarian() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const router = useRouter();
 
-  const signupHandler = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        toast("Added librarian successfully", {
-          hideProgressBar: true,
-          autoClose: 1000,
-          type: "success",
-          position: "top-center",
-        });
-        router.push("/signin");
-      })
-      .catch((error) => {
-        console.log("Error creating user");
+  const signupHandler = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+      const uid = user.uid;
+      console.log("====================================");
+      console.log(uid);
+      console.log("====================================");
+
+      // const response = await axios.post("../../../../api/setLibrarianRole", {
+      //   uid,
+      // });
+
+      toast("Added librarian successfully", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "success",
+        position: "top-center",
       });
-    const librarianDetails = {
-      firstName: firstName,
-      lastName: lastName,
-      phone:phone,
-      email: email,
-    };
-    fetch(
-      "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/librarianDetails.json",
-      {
-        method: "POST",
-        body: JSON.stringify(librarianDetails),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      setEmail("");
+      setFirstName("");
+      setLastName("");
+      setPassword("");
+      setPasswordAgain("");
+      setPhone("");
+
+      const userDetails = {
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        email: email,
+        role:'librarian'
+      };
+      fetch(
+        "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/userDetails.json",
+        {
+          method: "POST",
+          body: JSON.stringify(userDetails),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.log("====================================");
+      console.log("Error", error);
+      console.log("====================================");
+    }
   };
 
   return (
@@ -70,6 +94,7 @@ export default function AddLibrarian() {
                     name="firstName"
                     type="text"
                     autoComplete="firstName"
+                    value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
                     className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
@@ -88,6 +113,7 @@ export default function AddLibrarian() {
                     id="lastName"
                     name="lastName"
                     type="text"
+                    value={lastName}
                     autoComplete="lastName"
                     onChange={(e) => setLastName(e.target.value)}
                     required
@@ -109,6 +135,7 @@ export default function AddLibrarian() {
                     id="phone"
                     name="phone"
                     type="number"
+                    value={phone}
                     autoComplete="phone"
                     onChange={(e) => setPhone(e.target.value)}
                     required
@@ -129,6 +156,7 @@ export default function AddLibrarian() {
                     name="email"
                     type="email"
                     autoComplete="email"
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
@@ -152,6 +180,7 @@ export default function AddLibrarian() {
                   name="password"
                   type="password"
                   autoComplete="current-password"
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
@@ -173,6 +202,7 @@ export default function AddLibrarian() {
                   name="passwordAgain"
                   type="password"
                   autoComplete="current-password"
+                  value={passwordAgain}
                   onChange={(e) => setPasswordAgain(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
@@ -200,101 +230,3 @@ export default function AddLibrarian() {
     </>
   );
 }
-
-// "use client";
-
-// import React, { useState } from "react";
-
-// const AddLibrarian = () => {
-//   const [name, setName] = useState("");
-//   const [email,setEmail]=useState("")
-//   const [pass,setPass]=useState("")
-//   const handleName = (event) => {
-//     setName(event.target.value);
-//   };
-//   const handleEmail=(event)=>{
-//     setEmail(event.target.value)
-//   }
-//   const handlePass=(event)=>{
-//     setPass(event.target.value)
-//   }
-//   const handleAdd = async (e) => {
-//     e.preventDefault();
-//     const librarian={
-//       name:name,
-//       pass:pass,
-//       email:email
-//     }
-//     const res = await fetch(
-//       "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/librarian.json",
-//       {
-//         method: "POST",
-//         body: JSON.stringify(librarian),
-//         headers: {
-//           "Content-Type": "appliaction/json",
-//         },
-//       }
-//     );
-//     const data=await res.json()
-//     console.log(data)
-//     toast("Added Successfully", {
-//       hideProgressBar: true,
-//       autoClose: 1000,
-//       type: "success",
-//       position: "top-center",
-//     });
-//     setEmail("")
-//     setName("")
-//     setPass("")
-//   };
-//   return (
-//     <div>
-//       <form onSubmit={handleAdd}>
-//         <div className="mb-4">
-//           <label className="block font-medium">Enter name</label>
-//           <input
-//           style={{color:'black'}}
-//             id="name"
-//             name="name"
-//             value={name}
-//             onChange={handleName}
-//             required
-//             className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-//           />
-//         </div>
-//         <div className="mb-4">
-//           <label className="block font-medium">Enter email</label>
-//           <input
-//             id="email"
-//             name="email"
-//             value={email}
-//             onChange={handleEmail}
-//             required
-//             className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-//           />
-//         </div>
-//         <div className="mb-4">
-//           <label className="block font-medium">Password</label>
-//           <input
-//             id="password"
-//             type="password"
-//             name="password"
-//             value={pass}
-//             onChange={handlePass}
-//             required
-//             className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-500"
-//           />
-//         </div>
-//         <button
-//           // onClick={handleLogin}
-//           type="submit"
-//           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200"
-//         >
-//           Add
-//         </button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default AddLibrarian;

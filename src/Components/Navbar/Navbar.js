@@ -92,7 +92,7 @@ export default function Navbar() {
         if (userEmail === "admin@gmail.com") {
           setAdminLogged(true);
         } else {
-          setLibrarianLogged(true);
+           setLibrarianLogged(true);
         }
       } else {
         setAdminLogged(false);

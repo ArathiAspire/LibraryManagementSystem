@@ -20,6 +20,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import React, { useState, useEffect } from "react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import PropTypes from "prop-types";
+import styles from "./bookEntries.module.css";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -145,14 +146,13 @@ function BookTakenEntryTable() {
       align: "right",
     },
   ];
-  
-  const [disableRow,setDisabledRow]=useState({})
+
+  const [disableRow, setDisabledRow] = useState({});
   const handleCheck = (id) => {
-    setDisabledRow((prevDisabledRow)=>({
+    setDisabledRow((prevDisabledRow) => ({
       ...prevDisabledRow,
-      [id]:!prevDisabledRow[id]
-    }))
-    
+      [id]: !prevDisabledRow[id],
+    }));
   };
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -220,6 +220,9 @@ function BookTakenEntryTable() {
                   {book.issueDate}
                 </TableCell>
                 <TableCell
+                  className={`${
+                    book.status === "Returned" ? styles.returned : styles.issued
+                  }`}
                   style={{ width: 160, fontSize: "15px" }}
                   align="right"
                 >
