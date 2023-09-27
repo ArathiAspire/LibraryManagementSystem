@@ -45,16 +45,20 @@ const DeleteModal = (props) => {
     );
     if (!response.ok) {
       console.log("Error while deleting");
-    }
+    } 
+      toast("Book Deleted Successfully", {
+        hideProgressBar: true,
+        autoClose: 1000,
+        type: "success",
+        position: "top-center",
+      });
+    
 
-    toast("Book Deleted Successfully", {
-      hideProgressBar: true,
-      autoClose: 1000,
-      type: "success",
-      position: "top-center",
-    });
     props.handleCloseModal();
   };
+
+
+  
   const onDeleteStudentHandler = async () => {
     const response = fetch(
       `https://librarymanagement-29ab2-default-rtdb.firebaseio.com/students/${props.studentId}.json`,
@@ -64,7 +68,7 @@ const DeleteModal = (props) => {
       console.log("Error while deleting");
     }
 
-    toast(`Student Deleted Successfully ${props.studentId}`, {
+    toast(`Student Deleted Successfully`, {
       hideProgressBar: true,
       autoClose: 1000,
       type: "success",

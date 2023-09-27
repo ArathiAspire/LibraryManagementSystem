@@ -207,7 +207,7 @@ function ReturnBookModal(props) {
 
           <div className="flex justify-center space-x-4">
             <Button type="submit" variant="outlined" color="primary">
-              Returned
+              Return
             </Button>
 
             <Button

@@ -32,8 +32,8 @@ const LoginForm = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const userEmail = user.email;
-        if (userEmail === "admin@gmail.com") {
+        const uid = user.uid;
+        if (uid === "E1hrPTrUwXM8xiLUlUlCBpboLAp1") {
           setAdminLogged(true);
         } else {
           setLibrarianLogged(true);
@@ -49,10 +49,10 @@ const LoginForm = () => {
     event.preventDefault();
 
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        
-        
-        if (email === "admin@gmail.com") {
+      .then((userCredential) => {     
+        const user=userCredential.user 
+        const adminid=user.uid 
+        if (adminid === "E1hrPTrUwXM8xiLUlUlCBpboLAp1") {
           router.push("/admin");
           toast("Admin signed in successfully", {
             hideProgressBar: true,

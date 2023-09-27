@@ -139,10 +139,11 @@ const StudentListTable = () => {
     );
     const data = await response.json();
     const loadedStudents = [];
-    let id=1
+    let stdid=1
     for (const key in data) {
       loadedStudents.push({
-        id: id,
+        id:key,
+        stdid: stdid,
         fname: data[key].fname,
         lname: data[key].lname,
         batch: data[key].batch,
@@ -150,7 +151,7 @@ const StudentListTable = () => {
         contact: data[key].contact,
         email: data[key].email,
       });
-      id++
+      stdid++
     }
     setStudents(loadedStudents);
   };
@@ -232,7 +233,7 @@ const StudentListTable = () => {
                   style={{ width: 10, fontSize: "15px" }}
                   align="right"
                 >
-                  {student.id}
+                  {student.stdid}
                 </TableCell>
                 <TableCell
                   style={{ width: 160, fontSize: "15px" }}
@@ -289,11 +290,11 @@ const StudentListTable = () => {
                 )}
               </TableRow>
             ))}
-            {emptyRows > 0 && (
+            {/* {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
-            )}
+            )} */}
           </TableBody>
           <TableFooter>
             <TableRow>

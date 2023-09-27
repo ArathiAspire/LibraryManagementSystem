@@ -78,9 +78,6 @@ const BookListTable = ({ libLogged }) => {
   //   id: "",
   //   author: "",
   // });
-  useEffect(() => {
-    fetchBooks();
-  }, [books]);
 
   const [currentPage, setCurrentPage] = useState(1);
   // const handleFilterChange = (event) => {
@@ -93,22 +90,23 @@ const BookListTable = ({ libLogged }) => {
     );
     const data = await response.json();
     const loadedBooks = [];
-    let id = 1;
+    let bookid = 1;
     for (const key in data) {
       loadedBooks.push({
-        id: id,
+        id: key,
+        bookid: bookid,
         title: data[key].title,
         author: data[key].author,
         genre: data[key].genre,
         status: data[key].status,
       });
-      id++;
+      bookid++;
     }
     setBooks(loadedBooks);
   };
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [books]);
   const filteredBooks = books.filter((book) => {
     const titleMatch =
       searchtitle == "" ||
@@ -164,7 +162,7 @@ const BookListTable = ({ libLogged }) => {
       unsubscribe();
     };
   });
-  const fields = ["id", "author", "title", "genre"];
+  // const fields = ["id", "author", "title", "genre"];
   const handleOpenEditModal = (id) => {
     setOpenEdit(true);
   };
@@ -306,13 +304,13 @@ const BookListTable = ({ libLogged }) => {
             <th className="border p-2">Author</th>
             <th className="border p-2">Genre</th>
             <th className="border p-2">Status</th>
-            {/* <th className="border p-2"></th> */}
+            <th className="border p-2"></th>
           </tr>
         </thead>
         <tbody className="bg-gray-800">
           {currentBooks.map((book) => (
             <tr key={book.id} className="text-slate-200">
-              <td className="border p-2">{book.id}</td>
+              <td className="border p-2">{book.bookid}</td>
               <td className="border p-2">{book.title}</td>
               <td className="border p-2">{book.author}</td>
               <td className="border p-2">{book.genre}</td>

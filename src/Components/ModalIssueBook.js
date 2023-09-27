@@ -32,7 +32,7 @@ function ModalIssueBook(props) {
     console.log(books);
   };
   const [books, setBooks] = useState([]);
-  const [students,setStudents]=useState([])
+  const [students, setStudents] = useState([]);
   const [availableBooks, setAvailableBooks] = useState([]);
 
   const fetchStudents = async () => {
@@ -48,8 +48,8 @@ function ModalIssueBook(props) {
         lname: data[key].lname,
         batch: data[key].batch,
         department: data[key].dept,
-        contact:data[key].contact,
-        email:data[key].email
+        contact: data[key].contact,
+        email: data[key].email,
       });
     }
     setStudents(loadedStudents);
@@ -106,8 +106,6 @@ function ModalIssueBook(props) {
   }, []);
 
   const issueBook = books.filter((b) => b.title === book);
-
- 
 
   const bookIssueHandler = async (e) => {
     e.preventDefault();
@@ -172,6 +170,9 @@ function ModalIssueBook(props) {
             onChange={issueDateHandler}
             value={issueDate}
             placeholder="Enter date of issue"
+            InputLabelProps={{
+              shrink: true,
+            }}
             fullWidth
             required
           />
@@ -201,7 +202,10 @@ function ModalIssueBook(props) {
               onChange={borrowerHandler}
             >
               {students.map((student) => (
-                <MenuItem key={student.id} value={student.fname+ '' +student.lname}>
+                <MenuItem
+                  key={student.id}
+                  value={student.fname + "" + student.lname}
+                >
                   {student.fname} {student.lname}
                 </MenuItem>
               ))}

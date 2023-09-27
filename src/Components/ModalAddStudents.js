@@ -132,7 +132,7 @@ const ModalAddStudents = (props) => {
             value={email}
             onChange={handleEmail}
             id="standard-full-width"
-            placeholder="Enter Book Genre"
+            placeholder="Enter email"
             label="Enter Email"
             required
             fullWidth
@@ -166,7 +166,7 @@ const ModalAddStudents = (props) => {
             value={contact}
             onChange={handleContact}
             id="standard-full-width"
-            placeholder="Enter Book Genre"
+            placeholder="Enter contact"
             label="Enter Contact"
             required
             fullWidth

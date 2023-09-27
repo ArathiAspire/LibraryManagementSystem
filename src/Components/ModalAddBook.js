@@ -63,7 +63,7 @@ const ModalAddBook = (props) => {
         hideProgressBar: true,
         autoClose: 1000,
         type: "success",
-        position: "bottom-left",
+        position: "top-center",
       });
 
       setTitle("");
@@ -98,7 +98,7 @@ const ModalAddBook = (props) => {
             onChange={handleAuthor}
             required
             id="standard-full-width"
-            placeholder="Enter Book Title"
+            placeholder="Enter Book Author"
             label="Enter Author of the Book"
             fullWidth
             className="py-3"
