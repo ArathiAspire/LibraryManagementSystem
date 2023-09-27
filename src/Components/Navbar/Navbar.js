@@ -187,7 +187,7 @@ export default function Navbar() {
             <div>Library Management System</div>
           )}
         </Typography>
-        <ul className={`${classes.title} flex space-x-10 pr-20 space-around`}>
+        {/* <ul className={`${classes.title} flex space-x-10 pr-20 space-around`}>
           <li>
             <Link href="/" className="text-white hover-text-blue">
               Home
@@ -198,7 +198,7 @@ export default function Navbar() {
               About Us
             </Link>
           </li>
-        </ul>
+        </ul> */}
         <>
           {(adminLogged || librarianLogged) && userMenu}
 
