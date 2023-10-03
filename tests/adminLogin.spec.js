@@ -6,7 +6,7 @@ test("Admin test", async ({ page }) => {
   const authorName = "Harper Lee";
   const Genre = "Classic Fiction";
   const editedGenre = "Novel";
-  const studentName = "Dilna Daison";
+  const studentName = "Christy Shily";
 
   /*Locators */
   const adminButton = page.getByRole("link", { name: "Admin" });
@@ -108,34 +108,34 @@ test("Admin test", async ({ page }) => {
   await page.waitForURL("http://localhost:3000/admin/studentlist");
   await expect(page).toHaveURL("http://localhost:3000/admin/studentlist");
 
-  // // Get Students Name
+  // Get Students Name
 
-  // let studentNameFound = false;
+  let studentNameFound = false;
 
-  // while (!studentNameFound) {
-  //   const namesOnCurrentPage = await studentsFullName.allTextContents();
+  while (!studentNameFound) {
+    const namesOnCurrentPage = await studentsFullName.allTextContents();
 
-  //   // Check if the desired Student name exists in the current page
-  //   if (namesOnCurrentPage.includes(studentName)) {
-  //     studentNameFound = true;
-  //     expect(studentNameFound).toBe(true);
-  //     break;
-  //   }
+    // Check if the desired Student name exists in the current page
+    if (namesOnCurrentPage.includes(studentName)) {
+      studentNameFound = true;
+      expect(studentNameFound).toBe(true);
+      break;
+    }
 
-  //   const nextPageButtonDisabledAttr = await nextArrowStudentPage.getAttribute(
-  //     "disabled"
-  //   );
-  //   if (nextPageButtonDisabledAttr === "true") {
-  //     // If the "Next Page" button is disabled and the student name is not found, exit the loop
-  //     break;
-  //   } else {
-  //     // Click the "Next Page" button to go to the next page
-  //     await nextArrowStudentPage.click();
-  //     // Wait for some time to allow the next page to load
-  //     await page.waitForTimeout(2000);
-  //     // Adjust the time as needed
-  //   }
-  // }
+    const nextPageButtonDisabledAttr = await nextArrowStudentPage.getAttribute(
+      "disabled"
+    );
+    if (nextPageButtonDisabledAttr === "true") {
+      // If the "Next Page" button is disabled and the student name is not found, exit the loop
+      break;
+    } else {
+      // Click the "Next Page" button to go to the next page
+      await nextArrowStudentPage.click();
+      // Wait for some time to allow the next page to load
+      await page.waitForTimeout(2000);
+      // Adjust the time as needed
+    }
+  }
 
   await page.getByRole("link", { name: "Add Librarian" }).click();
   await page.waitForURL("http://localhost:3000/admin/addlibrarian");

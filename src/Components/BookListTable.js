@@ -3,6 +3,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import {
+  Box,
   Button,
   Divider,
   FormControl,
@@ -13,7 +14,17 @@ import {
   Modal,
   Paper,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
   TextField,
+  Tooltip,
+  useTheme,
 } from "@mui/material";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
@@ -25,33 +36,104 @@ import DeleteForeverSharpIcon from "@mui/icons-material/DeleteForeverSharp";
 import EditIcon from "@mui/icons-material/Edit";
 import ModalEditBook from "./ModalEditBook";
 import { CheckBox } from "@mui/icons-material";
+import LastPageIcon from "@mui/icons-material/LastPage";
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
+import PropTypes from "prop-types";
+
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
+}
+
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
 
 const BookListTable = ({ libLogged }) => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(3);
+  const [page, setPage] = useState(0);
 
   const booksPerPage = 3;
   const [books, setBooks] = useState([]);
   const searchParams = useSearchParams();
-  const LibLogged = searchParams.get("LibLogged");
+  // const LibLogged = searchParams.get("LibLogged");
   const [bookId, setBookId] = useState(null);
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
-  const [selectedField, setSelectedField] = useState(""); // State to store the selected field
-  const [searchValue, setSearchValue] = useState(""); // State to store the search input
   const [searchtitle, setSearchtitle] = useState("");
   const [searchauthor, setSearchauthor] = useState("");
   const [searchgenre, setSearchgenre] = useState("");
   const [searchavailability, setSearchavailability] = useState("");
 
-  // const handleFieldChange = (event) => {
-  //   setSelectedField(event.target.value);
-  // };
-
-  // const handleSearchChange = (event) => {
-  //   setSearchValue(event.target.value);
-  //   const { name, value } = event.target;
-  //   setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
-  // };
   const handleSearchTitle = (event) => {
     setSearchtitle(event.target.value);
   };
@@ -72,18 +154,16 @@ const BookListTable = ({ libLogged }) => {
   const handleCloseDeleteModal = () => {
     setOpen(false);
   };
-  // const [filters, setFilters] = useState({
-  //   title: "",
-  //   genre: "",
-  //   id: "",
-  //   author: "",
-  // });
+
+  const handleClearSearch = () => {
+    setSearchtitle("");
+    setSearchauthor("");
+    setSearchgenre("");
+    setSearchavailability("");
+  };
 
   const [currentPage, setCurrentPage] = useState(1);
-  // const handleFilterChange = (event) => {
-  //   const { name, value } = event.target;
-  //   setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
-  // };
+
   const fetchBooks = async () => {
     const response = await fetch(
       "https://librarymanagement-29ab2-default-rtdb.firebaseio.com/books.json"
@@ -121,28 +201,16 @@ const BookListTable = ({ libLogged }) => {
       searchavailability == "" || book.status === searchavailability;
     return titleMatch && authorMatch && genreMatch && availablilityMatch;
   });
-  // const filteredBooks = books.filter((book) => {
-  //   const { title, genre, id, author } = filters;
-  //   return (
-  //     (title === "" ||
-  //       book.title.toLowerCase().includes(title.toLowerCase())) &&
-  //     (genre === "" || book.genre.toLowerCase() === genre.toLowerCase()) &&
-  //     (id === "" ||
-  //       book.id.toLowerCase().toString().includes(id.toLowerCase())) &&
-  //     (author === "" ||
-  //       book.author.toLowerCase().includes(author.toLowerCase()))
-  //   );
-  // });
 
-  const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
-  const startIndex = (currentPage - 1) * booksPerPage;
-  const endIndex = startIndex + booksPerPage;
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // const pageCount = Math.ceil(filteredBooks.length / booksPerPage);
+  // const startIndex = (currentPage - 1) * booksPerPage;
+  // const endIndex = startIndex + booksPerPage;
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const currentBooks = filteredBooks.slice(startIndex, endIndex);
+  // const currentBooks = filteredBooks.slice(startIndex, endIndex);
 
   const [adminLogged, setAdminLogged] = useState(false);
-  const [librarianLogged, setLibrarianLogged] = useState(false);
+  // const [librarianLogged, setLibrarianLogged] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -155,14 +223,12 @@ const BookListTable = ({ libLogged }) => {
         }
       } else {
         setAdminLogged(false);
-        setLibrarianLogged(false);
       }
     });
     return () => {
       unsubscribe();
     };
   });
-  // const fields = ["id", "author", "title", "genre"];
   const handleOpenEditModal = (id) => {
     setOpenEdit(true);
   };
@@ -174,55 +240,18 @@ const BookListTable = ({ libLogged }) => {
     setEditBookId(id);
     handleOpenEditModal();
   };
+
+  const columns = [
+    { id: "Book ID", maxWidth: 5, label: "Book ID", align: "right" },
+    { id: "Title", label: "Title", minWidth: 200, align: "right" },
+    { id: "Author", label: "Author", minWidth: 170, align: "right" },
+    { id: "Genre", label: "Genre", minWidth: 170, align: "right" },
+    { id: "Status", label: "Status", minWidth: 170, align: "right" },
+  ];
   return (
     <div className="tabledata w-full overflow-x-auto text-slate-900 px-10">
       <div className="py-2 flex justify-center">
         {" "}
-        {/* <FormControl
-          style={{
-            margin: 5,
-            backgroundColor: "white",
-            color: "black",
-            width: 250,
-          }}
-        >
-          <InputLabel required>Select Field</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Select Book"
-            value={selectedField}
-            onChange={handleFieldChange}
-          >
-            {fields.map((field) => (
-              <MenuItem key={field} value={field}>
-                {field}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Paper
-          sx={{
-            p: "1px 2px",
-            display: "flex",
-            alignItems: "center",
-            width: 250,
-          }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            type="text"
-            name={selectedField}
-            placeholder={`search by ${
-              selectedField ? selectedField : "id/title/author/genre"
-            }`}
-            value={searchValue}
-            onChange={handleSearchChange}
-          />
-          <IconButton type="button" sx={{ p: "7px" }} aria-label="search">
-            <SearchOutlinedIcon />
-          </IconButton>
-        </Paper> */}
         <Paper
           sx={{
             p: "1px 2px",
@@ -295,53 +324,123 @@ const BookListTable = ({ libLogged }) => {
             </Select>
           </FormControl>
         </Paper>
+        <div className="py-2 justify-center">
+          <button
+            className="text-slate-100 bg-slate-900 rounded-lg p-2 hover:bg-slate-700 hover:text-slate-50"
+            onClick={handleClearSearch}
+          >
+            Clear search
+          </button>
+        </div>
       </div>
-      <table className="min-w-full border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border p-2">Book ID</th>
-            <th className="border p-2">Title</th>
-            <th className="border p-2">Author</th>
-            <th className="border p-2">Genre</th>
-            <th className="border p-2">Status</th>
-            <th className="border p-2"></th>
-          </tr>
-        </thead>
-        <tbody className="bg-gray-800">
-          {currentBooks.map((book) => (
-            <tr key={book.id} className="text-slate-200">
-              <td className="border p-2">{book.bookid}</td>
-              <td className="border p-2">{book.title}</td>
-              <td className="border p-2">{book.author}</td>
-              <td className="border p-2">{book.genre}</td>
-              <td className="border p-2">{book.status}</td>
-              {adminLogged && (
-                <td className="border">
-                  <Button
-                    color="error"
-                    startIcon={<DeleteForeverSharpIcon />}
-                    onClick={() => handleOpenDeleteModal(book.id)}
-                  ></Button>
-                  <Button
-                    color="warning"
-                    onClick={() => onEditBookHandler(book.id)}
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{
+                      minWidth: column.minWidth,
+                      fontWeight: "bold", // Add this line for bold text
+                      fontSize: "18px", // Add this line for adjusting font size
+                    }}
                   >
-                    <EditIcon />
-                  </Button>
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Pagination
-        booksPerPage={booksPerPage}
-        totalBooks={books.length}
-        paginate={paginate}
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
-      <Modal open={open} onClose={handleCloseDeleteModal}>
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? filteredBooks.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : currentBooks
+              ).map((book) => (
+                <TableRow key={book.id}>
+                  <TableCell
+                    style={{ width: 10, fontSize: "15px" }}
+                    align="right"
+                  >
+                    {book.bookid}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 160, fontSize: "15px" }}
+                    align="right"
+                  >
+                    {book.title}
+                  </TableCell>
+
+                  <TableCell
+                    style={{ width: 160, fontSize: "15px" }}
+                    align="right"
+                  >
+                    {book.author}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 160, fontSize: "15px" }}
+                    align="right"
+                  >
+                    {book.genre}
+                  </TableCell>
+                  <TableCell
+                    style={{ width: 160, fontSize: "15px" }}
+                    align="right"
+                  >
+                    {book.status}
+                  </TableCell>
+                  {adminLogged && (
+                    <TableCell
+                      style={{ width: 160, fontSize: "15px" }}
+                      align="right"
+                    >
+                      <Tooltip title="delete book">
+                        <Button
+                          color="error"
+                          startIcon={<DeleteForeverSharpIcon />}
+                          onClick={() => handleOpenDeleteModal(book.id)}
+                        ></Button>
+                      </Tooltip>
+                      <Tooltip title="edit book details">
+                        <Button
+                          color="warning"
+                          onClick={() => onEditBookHandler(book.id)}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={3}
+                  count={filteredBooks.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+        <Modal open={open} onClose={handleCloseDeleteModal}>
         <DeleteModal
           handleCloseModal={handleCloseDeleteModal}
           bookId={bookId}
@@ -350,9 +449,11 @@ const BookListTable = ({ libLogged }) => {
       <Modal open={openEdit} onClose={handleCloseEditModal}>
         <ModalEditBook
           handleCloseModal={handleCloseEditModal}
-          editBook={currentBooks.find((book) => book.id === editBookId)}
+          editBook={filteredBooks.find((book) => book.id === editBookId)}
         />
       </Modal>
+      </Paper>
+      
     </div>
   );
 };
