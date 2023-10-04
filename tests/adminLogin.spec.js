@@ -24,7 +24,7 @@ test("Admin test", async ({ page }) => {
   const toastMessage = page.locator(
     "[class='Toastify__toast-body'] [style*=none]"
   );
-  const nextPageButton = page.locator("//button[normalize-space()='next']");
+  //const nextPageButton = page.locator("//button[normalize-space()='next']");
   const addedBookRow = page.locator("table tbody tr");
   const deleteIcon = page.locator("//tbody/tr[last()]/td[last()]/button[1]");
   const deleteButton = page.locator(
@@ -71,7 +71,7 @@ test("Admin test", async ({ page }) => {
       break;
     }
 
-    const nextPageButtonDisabledAttr = await nextPageButton.getAttribute(
+    const nextPageButtonDisabledAttr = await nextArrowStudentPage.getAttribute(
       "disabled"
     );
     if (nextPageButtonDisabledAttr === "true") {
@@ -79,7 +79,7 @@ test("Admin test", async ({ page }) => {
       break;
     } else {
       // Click the "Next Page" button to go to the next page
-      await nextPageButton.click();
+      await nextArrowStudentPage.click();
       // Wait for some time to allow the next page to load
       await page.waitForTimeout(2000);
       // Adjust the time as needed

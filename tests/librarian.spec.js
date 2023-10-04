@@ -18,7 +18,6 @@ test("Librarian test", async ({ page }) => {
   const passwordField = page.locator("#password");
   const profileIcon = page.locator("[id='composition-button']");
   const booksLink = page.locator("[href='/librarian/booklist']");
-  const nextPageButton = page.locator("//button[normalize-space()='next']");
   const studentsLink = page.locator("[href='/librarian/studentlist']");
   const studentsFullName = page.locator("//tbody/tr/td[2]");
   const nextArrowStudentPage = page.locator("[aria-label='next page']");
@@ -74,7 +73,7 @@ test("Librarian test", async ({ page }) => {
   /*Hit the Url */
   await page.goto("http://localhost:3000/");
   await librarianButton.click();
-  await page.waitForTimeout(5000);
+  await page.waitForURL("http://localhost:3000/signin");
   await expect(page).toHaveURL("http://localhost:3000/signin");
   await emailField.fill("akshay@gmail.com");
   await passwordField.fill("akshay@123");
@@ -99,7 +98,7 @@ test("Librarian test", async ({ page }) => {
       break;
     }
 
-    const nextPageButtonDisabledAttr = await nextPageButton.getAttribute(
+    const nextPageButtonDisabledAttr = await nextArrowStudentPage.getAttribute(
       "disabled"
     );
     if (nextPageButtonDisabledAttr === "true") {
@@ -107,7 +106,7 @@ test("Librarian test", async ({ page }) => {
       break;
     } else {
       // Click the "Next Page" button to go to the next page
-      await nextPageButton.click();
+      await nextArrowStudentPage.click();
       // Wait for some time to allow the next page to load
       await page.waitForTimeout(2000);
       // Adjust the time as needed
@@ -142,9 +141,7 @@ test("Librarian test", async ({ page }) => {
       break;
     }
 
-    const nextPageButtonDisabledAttr = await nextArrowStudentPage.getAttribute(
-      "disabled"
-    );
+    const nextPageButtonDisabledAttr = await nextArrowStudentPage.getAttribute("disabled");
     if (nextPageButtonDisabledAttr === "true") {
       // If the "Next Page" button is disabled and the student name is not found, exit the loop
       break;
